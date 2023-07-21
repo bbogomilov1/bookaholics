@@ -11,7 +11,11 @@ export class FirebaseApiService {
 
   constructor(private http: HttpClient) {}
 
-  postToFirebase(data: any): Observable<any> {
+  postBook(data: any): Observable<any> {
     return this.http.post<any>(this.firebaseUrl, data);
+  }
+
+  getBooks(): Observable<any> {
+    return this.http.get<any>(this.firebaseUrl);
   }
 }

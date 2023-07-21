@@ -1,2 +1,12 @@
 <h1>app component</h1>
-<button (click)="postDataToFirebase()">Click to post data</button>
+<button (click)="getBooks()">Click to get books</button>
+
+<div *ngFor="let book of books">
+  <!-- Display book information here -->
+  <img src="{{ book.imageUrl }}" alt="{{ book.title }}" />
+  <h3>{{ book.title }}</h3>
+  <p>{{ book.author }}</p>
+  <p>{{ book.plot }}</p>
+</div>
+
+<button (click)="postBook()">Click to post a book</button>
