@@ -1,25 +1,28 @@
-<!-- <h1>app component</h1>
-<button (click)="getBooks()">Click to get books</button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Bookaholics</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="navbar-nav">
+      <a class="nav-link" routerLink="">Home</a>
+      <a class="nav-link" routerLink="library">Library</a>
+      <a class="nav-link" routerLink="add-book">Add Book</a>
+      <a class="nav-link" routerLink="edit-book">Edit Book</a>
+      <a class="nav-link" routerLink="user/login">Login</a>
+      <a class="nav-link" routerLink="user/register">Register</a>
+    </div>
+  </div>
+</nav>
 
-<div *ngFor="let book of books"> -->
-<!-- Display book information here -->
-<!-- <img src="{{ book.imageUrl }}" alt="{{ book.title }}" />
-  <h3>{{ book.title }}</h3>
-  <p>{{ book.author }}</p>
-  <p>{{ book.plot }}</p>
+<div class="container">
+  <router-outlet />
 </div>
-
-<button (click)="postBook()">Click to post a book</button> -->
-
-<h1>Bookaholics</h1>
-
-<ul>
-  <li><a routerLink="">Home</a></li>
-  <li><a routerLink="library">Library</a></li>
-  <li><a routerLink="add-book">Add Book</a></li>
-  <li><a routerLink="edit-book">Edit Book</a></li>
-  <li><a routerLink="user/login">Login</a></li>
-  <li><a routerLink="user/register">Register</a></li>
-</ul>
-
-<router-outlet />
