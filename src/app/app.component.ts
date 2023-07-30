@@ -14,17 +14,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getBooks() {
-    this.firebaseApiService.getBooks().subscribe(
-      (response) => {
-        this.books = Object.values(response); // Assuming the data is an object with random keys
-        // You may need to modify this based on your Firebase data structure
-      },
-      (error) => {
-        console.error('Error fetching books:', error);
-      }
-    );
-  }
+  // getBooks() {
+  //   this.firebaseApiService.getBooks().subscribe(
+  //     (response) => {
+  //       this.books = Object.values(response); // Assuming the data is an object with random keys
+  //       // You may need to modify this based on your Firebase data structure
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching books:', error);
+  //     }
+  //   );
+  // }
 
   postBook() {
     const postData = {
