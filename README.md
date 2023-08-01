@@ -70,7 +70,7 @@ The Bookaholics project follows a modular and component-based architecture, buil
 
 With Bookaholics, users can dive into the world of books, explore vast libraries, and create their own literary space. The project's architecture and component-based design provide a foundation for further expansion and improvement. Enjoy creating and happy reading! :books:
 
-# Bookaholics
+## Bookaholics
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.3.
 
