@@ -1,0 +1,10 @@
+<div *ngFor="let book of books">
+  <img
+    src="{{ 'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg' }}"
+    alt=""
+  />
+  <h2>{{ book.title }}</h2>
+  <p>Author: {{ book.author_name?.join(", ") }}</p>
+  <p>Published Date: {{ book.first_publish_year }}</p>
+  <p>Description: {{ book.description }}</p>
+</div>
