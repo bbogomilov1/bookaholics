@@ -1,3 +1,8 @@
-/* .navbar {
+.navbar {
   padding: 10px 20px;
-} */
+}
+
+.navbar-color {
+  background-color: #fdf0d9;
+  margin-bottom: 20px;
+}
