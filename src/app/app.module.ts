@@ -10,6 +10,7 @@ import { EditBookComponent } from './edit-book/edit-book.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './library/library.component';
+import { MyBooksComponent } from './my-books/my-books.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { LibraryComponent } from './library/library.component';
     LoginComponent,
     RegisterComponent,
     LibraryComponent,
+    MyBooksComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [],

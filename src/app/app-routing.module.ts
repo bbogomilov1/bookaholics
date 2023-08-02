@@ -6,6 +6,7 @@ import { EditBookComponent } from './edit-book/edit-book.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './library/library.component';
+import { MyBooksComponent } from './my-books/my-books.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,10 @@ const routes: Routes = [
   {
     path: 'library',
     component: LibraryComponent,
+  },
+  {
+    path: 'my-books',
+    component: MyBooksComponent,
   },
   {
     path: 'add-book',
