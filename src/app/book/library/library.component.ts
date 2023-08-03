@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../book.service';
+import { Book } from 'src/app/types/book';
 
 @Component({
   selector: 'app-library',
@@ -7,7 +8,7 @@ import { BookService } from '../book.service';
   styleUrls: ['./library.component.css'],
 })
 export class LibraryComponent implements OnInit {
-  books: any[] = []; // Replace 'any[]' with the appropriate data type of the books
+  books: Book[] = [];
 
   constructor(private bookService: BookService) {}
 

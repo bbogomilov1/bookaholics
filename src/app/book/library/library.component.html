@@ -5,12 +5,13 @@
       [src]="'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'"
       alt="Book Cover"
     />
+
+    <!-- Using the default image in case of missing image -->
     <ng-template #defaultCover>
-      <!-- Use the default image here -->
       <img src="../assets/missingbook.webp" alt="Default Book Cover" />
     </ng-template>
     <h2>{{ book.title }}</h2>
-    <p>Author: {{ book.author_name?.slice(0, 2).join(", ") }}</p>
+    <p>Author: {{ book.author_name.slice(0, 2).join(", ") }}</p>
     <p>Published Date: {{ book.first_publish_year }}</p>
   </div>
 </div>

@@ -5,13 +5,13 @@
 }
 
 .book-item {
-  width: calc(33.33% - 20px); /* Adjust the width to display 3 books per row */
+  width: calc(33.33% - 20px);
   margin-bottom: 20px;
   padding: 10px;
   border: 1px solid #ddd;
 }
 
 .book-item img {
-  height: 200px; /* Set a fixed height for the book covers */
-  object-fit: cover; /* Maintain aspect ratio and cover the entire box */
+  height: 200px;
+  object-fit: cover;
 }
