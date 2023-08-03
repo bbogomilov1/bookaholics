@@ -11,6 +11,7 @@ import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './book/library/library.component';
 import { MyBooksComponent } from './book/my-books/my-books.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MyBooksComponent } from './book/my-books/my-books.component';
     RegisterComponent,
     LibraryComponent,
     MyBooksComponent,
+    LoaderComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [],

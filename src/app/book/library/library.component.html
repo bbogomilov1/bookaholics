@@ -1,17 +1,23 @@
-<div class="book-container">
-  <div *ngFor="let book of books" class="book-item">
-    <img
-      *ngIf="book.cover_i; else defaultCover"
-      [src]="'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'"
-      alt="Book Cover"
-    />
-
-    <!-- Using the default image in case of missing image -->
-    <ng-template #defaultCover>
-      <img src="../assets/missingbook.webp" alt="Default Book Cover" />
-    </ng-template>
-    <h2>{{ book.title }}</h2>
-    <p>Author: {{ book.author_name.slice(0, 2).join(", ") }}</p>
-    <p>Published Date: {{ book.first_publish_year }}</p>
-  </div>
+<div *ngIf="isLoading; else bookGrid" class="loader">
+  <app-loader></app-loader>
 </div>
+
+<ng-template #bookGrid>
+  <div class="book-container">
+    <div *ngFor="let book of books" class="book-item">
+      <img
+        *ngIf="book.cover_i; else defaultCover"
+        [src]="'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'"
+        alt="Book Cover"
+      />
+
+      <!-- Using the default image in case of missing image -->
+      <ng-template #defaultCover>
+        <img src="../assets/missingbook.webp" alt="Default Book Cover" />
+      </ng-template>
+      <h2>{{ book.title }}</h2>
+      <p>Author: {{ book.author_name.slice(0, 2).join(", ") }}</p>
+      <p>Published Date: {{ book.first_publish_year }}</p>
+    </div>
+  </div>
+</ng-template>
