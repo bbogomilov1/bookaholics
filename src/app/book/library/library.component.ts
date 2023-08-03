@@ -16,10 +16,10 @@ export class LibraryComponent implements OnInit {
   }
 
   fetchBooks() {
-    const searchQuery = 'fantasy';
+    const searchQuery = 'kids';
     this.bookService.searchBooks(searchQuery).subscribe(
       (response) => {
-        this.books = response.docs; // The 'docs' property contains the array of books from the API response
+        this.books = response.docs.slice(0, 21);
       },
       (error) => {
         console.error('Error fetching books:', error);
