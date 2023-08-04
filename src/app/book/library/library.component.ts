@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { BookService } from '../book.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Book } from 'src/app/types/book';
 import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { LibraryService } from './library.service';
 
 @Component({
   selector: 'app-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.css'],
 })
-export class LibraryComponent implements OnInit {
+export class LibraryComponent implements OnInit, OnDestroy {
   faBookmark = faBookmark;
   faSquareCheck = faSquareCheck;
 
@@ -22,7 +23,9 @@ export class LibraryComponent implements OnInit {
   isSearching: boolean = false;
   currentSearchQuery: string = '';
 
-  constructor(private bookService: BookService) {}
+  private booksSubscription: Subscription | null = null;
+
+  constructor(private libraryService: LibraryService) {}
 
   ngOnInit() {
     this.fetchBooks();
@@ -46,27 +49,29 @@ export class LibraryComponent implements OnInit {
   fetchBooks(searchQuery: string = 'classics') {
     this.currentSearchQuery = searchQuery;
 
-    this.bookService.searchBooks(searchQuery, this.booksToShow).subscribe(
-      (response) => {
-        console.log(response);
+    this.booksSubscription = this.libraryService
+      .searchBooks(searchQuery, this.booksToShow)
+      .subscribe(
+        (response) => {
+          console.log(response);
 
-        const fetchedBooks = response.docs.filter(
-          (book) =>
-            book.title && book.author_name && book.author_name.length > 0
-        );
-        this.books = fetchedBooks;
-        this.totalBooks = response.numFound;
-        this.isLoading = false;
-        this.buttonLessIsLoading = false;
-        this.buttonMoreIsLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching books:', error);
-        this.isLoading = false;
-        this.buttonLessIsLoading = false;
-        this.buttonMoreIsLoading = false;
-      }
-    );
+          const fetchedBooks = response.docs.filter(
+            (book) =>
+              book.title && book.author_name && book.author_name.length > 0
+          );
+          this.books = fetchedBooks;
+          this.totalBooks = response.numFound;
+          this.isLoading = false;
+          this.buttonLessIsLoading = false;
+          this.buttonMoreIsLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching books:', error);
+          this.isLoading = false;
+          this.buttonLessIsLoading = false;
+          this.buttonMoreIsLoading = false;
+        }
+      );
   }
 
   loadLessBooks() {
@@ -98,24 +103,30 @@ export class LibraryComponent implements OnInit {
   searchBooks() {
     this.isSearching = true;
 
-    this.bookService.searchBooks(this.searchQuery, this.booksToShow).subscribe(
-      (response) => {
-        const fetchedBooks = response.docs.filter(
-          (book) =>
-            book.title && book.author_name && book.author_name.length > 0
-        );
-        this.books = fetchedBooks;
-        this.totalBooks = response.numFound;
-        this.isLoading = false;
-        this.buttonLessIsLoading = false;
-        this.buttonMoreIsLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching books:', error);
-        this.isLoading = false;
-        this.buttonLessIsLoading = false;
-        this.buttonMoreIsLoading = false;
-      }
-    );
+    this.booksSubscription = this.libraryService
+      .searchBooks(this.searchQuery, this.booksToShow)
+      .subscribe(
+        (response) => {
+          const fetchedBooks = response.docs.filter(
+            (book) =>
+              book.title && book.author_name && book.author_name.length > 0
+          );
+          this.books = fetchedBooks;
+          this.totalBooks = response.numFound;
+          this.isLoading = false;
+          this.buttonLessIsLoading = false;
+          this.buttonMoreIsLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching books:', error);
+          this.isLoading = false;
+          this.buttonLessIsLoading = false;
+          this.buttonMoreIsLoading = false;
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.booksSubscription?.unsubscribe();
   }
 }
