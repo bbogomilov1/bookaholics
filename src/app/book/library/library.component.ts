@@ -8,11 +8,16 @@ import { Book } from 'src/app/types/book';
   styleUrls: ['./library.component.css'],
 })
 export class LibraryComponent implements OnInit {
-  books: Book[] = [];
-  isLoading: boolean = true;
-  buttonIsLoading: boolean = false;
   private booksToShow: number = 9;
+  searchQuery: string = '';
+  books: Book[] = [];
   totalBooks: number = 0;
+  isLoading: boolean = true;
+  buttonLessIsLoading: boolean = false;
+  buttonMoreIsLoading: boolean = false;
+  isSearching: boolean = false;
+
+  currentSearchQuery: string = '';
 
   constructor(private bookService: BookService) {}
 
@@ -20,8 +25,9 @@ export class LibraryComponent implements OnInit {
     this.fetchBooks();
   }
 
-  fetchBooks() {
-    const searchQuery = 'hunger games';
+  fetchBooks(searchQuery: string = 'classics') {
+    this.currentSearchQuery = searchQuery;
+
     this.bookService.searchBooks(searchQuery, this.booksToShow).subscribe(
       (response) => {
         console.log(response);
@@ -33,19 +39,65 @@ export class LibraryComponent implements OnInit {
         this.books = fetchedBooks;
         this.totalBooks = response.numFound;
         this.isLoading = false;
-        this.buttonIsLoading = false;
+        this.buttonLessIsLoading = false;
+        this.buttonMoreIsLoading = false;
       },
       (error) => {
         console.error('Error fetching books:', error);
         this.isLoading = false;
+        this.buttonLessIsLoading = false;
+        this.buttonMoreIsLoading = false;
       }
     );
   }
 
-  loadMoreBooks() {
-    this.buttonIsLoading = true;
+  loadLessBooks() {
+    if (this.booksToShow <= 9) {
+      return;
+    }
 
+    this.buttonLessIsLoading = true;
+    this.booksToShow -= 9;
+
+    if (!this.isSearching) {
+      this.fetchBooks(this.currentSearchQuery);
+    } else {
+      this.searchBooks();
+    }
+  }
+
+  loadMoreBooks() {
+    this.buttonMoreIsLoading = true;
     this.booksToShow += 9;
-    this.fetchBooks();
+
+    if (!this.isSearching) {
+      this.fetchBooks(this.currentSearchQuery);
+    } else {
+      this.searchBooks();
+    }
+  }
+
+  searchBooks() {
+    this.isSearching = true;
+
+    this.bookService.searchBooks(this.searchQuery, this.booksToShow).subscribe(
+      (response) => {
+        const fetchedBooks = response.docs.filter(
+          (book) =>
+            book.title && book.author_name && book.author_name.length > 0
+        );
+        this.books = fetchedBooks;
+        this.totalBooks = response.numFound;
+        this.isLoading = false;
+        this.buttonLessIsLoading = false;
+        this.buttonMoreIsLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching books:', error);
+        this.isLoading = false;
+        this.buttonLessIsLoading = false;
+        this.buttonMoreIsLoading = false;
+      }
+    );
   }
 }

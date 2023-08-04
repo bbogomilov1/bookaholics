@@ -15,7 +15,7 @@ export class BookService {
     searchQuery: string,
     limit: number
   ): Observable<OpenLibraryResponse> {
-    const url = `https://openlibrary.org/search.json?q=${searchQuery}&limit=${limit}`;
+    const url = `${this.apiUrl}?q=${searchQuery}&limit=${limit}`;
     return this.http.get<OpenLibraryResponse>(url);
   }
 }

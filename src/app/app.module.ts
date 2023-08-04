@@ -12,6 +12,7 @@ import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './book/library/library.component';
 import { MyBooksComponent } from './book/my-books/my-books.component';
 import { LoaderComponent } from './loader/loader.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { LoaderComponent } from './loader/loader.component';
     MyBooksComponent,
     LoaderComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

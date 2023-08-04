@@ -1,3 +1,13 @@
+<div class="search-container">
+  <input
+    type="text"
+    placeholder="Search for books..."
+    [(ngModel)]="searchQuery"
+    (keyup.enter)="searchBooks()"
+  />
+  <button (click)="searchBooks()" class="search-btn">Search</button>
+</div>
+
 <div *ngIf="isLoading; else bookGrid" class="loader">
   <app-loader></app-loader>
 </div>
@@ -22,10 +32,19 @@
   </div>
 </ng-template>
 
-<button
-  *ngIf="books.length < totalBooks && !isLoading"
-  (click)="loadMoreBooks()"
-  class="load-more-btn"
->
-  {{ !buttonIsLoading ? "Show More" : "Loading..." }}
-</button>
+<div class="button-container">
+  <button
+    *ngIf="books.length < totalBooks && !isLoading"
+    (click)="loadLessBooks()"
+    class="load-more-btn"
+  >
+    {{ !buttonLessIsLoading ? "Show Less" : "Loading..." }}
+  </button>
+  <button
+    *ngIf="books.length < totalBooks && !isLoading"
+    (click)="loadMoreBooks()"
+    class="load-more-btn"
+  >
+    {{ !buttonMoreIsLoading ? "Show More" : "Loading..." }}
+  </button>
+</div>
