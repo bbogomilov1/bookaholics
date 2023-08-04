@@ -48,6 +48,7 @@
       <h2>{{ book.title }}</h2>
       <p>Author: {{ book.author_name.slice(0, 2).join(", ") }}</p>
       <p>Published Date: {{ book.first_publish_year }}</p>
+      <p>Genre: {{ book.subject.slice(0, 3).join(", ") }}</p>
     </div>
   </div>
 </ng-template>

@@ -1,1 +1,34 @@
-<p>add-book works!</p>
+<div class="add-book-container">
+  <h2>Add Book</h2>
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" formControlName="title" required />
+    </div>
+    <div class="form-group">
+      <label for="cover">Cover</label>
+      <input type="text" id="cover" formControlName="cover" required />
+    </div>
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input type="text" id="author" formControlName="author" required />
+    </div>
+    <div class="form-group">
+      <label for="publishedDate">Published Date</label>
+      <input
+        type="text"
+        id="publishedDate"
+        formControlName="publishedDate"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="genre">Genre</label>
+      <input type="text" id="genre" formControlName="genre" required />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit">Add Book</button>
+    </div>
+  </form>
+</div>
