@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BookService } from '../book.service';
 import { Book } from 'src/app/types/book';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
   styleUrls: ['./add-book.component.css'],
 })
-export class AddBookComponent implements OnInit {
+export class AddBookComponent implements OnInit, OnDestroy {
   bookForm!: FormGroup;
+
+  private bookSubscription: Subscription | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,7 +46,6 @@ export class AddBookComponent implements OnInit {
         // Success! Handle any success actions here
         console.log('Book added successfully:', response);
 
-        // Reset the form after successful submission
         this.bookForm.reset();
       },
       (error) => {
@@ -51,5 +53,9 @@ export class AddBookComponent implements OnInit {
         console.error('Error adding book:', error);
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.bookSubscription?.unsubscribe();
   }
 }
