@@ -6,7 +6,7 @@ import { EditBookComponent } from './book/edit-book/edit-book.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './book/library/library.component';
-import { MyBooksComponent } from './book/my-books/my-books.component';
+import { MyBookshelfComponent } from './book/my-bookshelf/my-bookshelf.component';
 
 const routes: Routes = [
   {
@@ -23,8 +23,8 @@ const routes: Routes = [
     component: LibraryComponent,
   },
   {
-    path: 'my-books',
-    component: MyBooksComponent,
+    path: 'my-bookshelf',
+    component: MyBookshelfComponent,
   },
   {
     path: 'add-book',

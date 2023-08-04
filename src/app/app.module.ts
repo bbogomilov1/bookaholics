@@ -10,9 +10,10 @@ import { EditBookComponent } from './book/edit-book/edit-book.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './book/library/library.component';
-import { MyBooksComponent } from './book/my-books/my-books.component';
 import { LoaderComponent } from './loader/loader.component';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MyBookshelfComponent } from './book/my-bookshelf/my-bookshelf.component';
 
 @NgModule({
   declarations: [
@@ -23,10 +24,16 @@ import { FormsModule } from '@angular/forms';
     LoginComponent,
     RegisterComponent,
     LibraryComponent,
-    MyBooksComponent,
     LoaderComponent,
+    MyBookshelfComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    FontAwesomeModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

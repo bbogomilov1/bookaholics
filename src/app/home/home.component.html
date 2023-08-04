@@ -19,20 +19,23 @@
     <h2>Features</h2>
     <div class="feature-container">
       <div class="feature" routerLink="/library">
-        <i class="fas fa-book"></i>
-        <h3>Library</h3>
+        <h3>
+          <fa-icon [icon]="faBook" style="color: rgb(70, 140, 253)" /> Library
+        </h3>
         <p>Browse our extensive library and discover new books to read.</p>
       </div>
-      <div class="feature" routerLink="/my-books">
-        <i class="fas fa-heart"></i>
-        <h3>My Books</h3>
+      <div class="feature" routerLink="/my-bookshelf">
+        <h3>
+          <fa-icon [icon]="faHeart" style="color: rgb(253, 70, 70)" /> My Books
+        </h3>
         <p>
           Keep track of the books you've read and revisit your literary journey.
         </p>
       </div>
       <div class="feature" routerLink="/add-book">
-        <i class="fas fa-plus"></i>
-        <h3>Add Book</h3>
+        <h3>
+          <fa-icon [icon]="faPen" style="color: rgb(55, 180, 116)" /> Add Book
+        </h3>
         <p>
           Share your favorite books with the community by adding them to the
           collection.

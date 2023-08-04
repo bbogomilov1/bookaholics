@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../book.service';
 import { Book } from 'src/app/types/book';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-library',
@@ -8,6 +9,7 @@ import { Book } from 'src/app/types/book';
   styleUrls: ['./library.component.css'],
 })
 export class LibraryComponent implements OnInit {
+  faCoffee = faCheck;
   private booksToShow: number = 9;
   searchQuery: string = '';
   books: Book[] = [];
@@ -23,6 +25,21 @@ export class LibraryComponent implements OnInit {
 
   ngOnInit() {
     this.fetchBooks();
+  }
+
+  addToMyBooks(book: Book) {
+    // Implement the logic to add the book to the user's library
+    console.log('Added to My Books:', book.title);
+  }
+
+  removeFromMyBooks(book: Book) {
+    // Implement the logic to remove the book from the user's library
+    console.log('Removed from My Books:', book.title);
+  }
+
+  addToWishList(book: Book) {
+    // Implement the logic to add the book to the user's wish list
+    console.log('Added to Wish List:', book.title);
   }
 
   fetchBooks(searchQuery: string = 'classics') {

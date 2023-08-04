@@ -70,3 +70,18 @@ button.search-btn:hover {
 .load-more-btn:hover {
   background-color: #bd8a47;
 }
+
+/* icons */
+/* .btn-icon {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #777;
+  margin-right: 8px;
+}
+
+.btn-icon:hover {
+  color: #333;
+} */
