@@ -21,3 +21,11 @@
     </div>
   </div>
 </ng-template>
+
+<button
+  *ngIf="books.length < totalBooks && !isLoading"
+  (click)="loadMoreBooks()"
+  class="load-more-btn"
+>
+  {{ !buttonIsLoading ? "Show More" : "Loading..." }}
+</button>
