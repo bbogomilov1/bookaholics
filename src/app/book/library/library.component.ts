@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../book.service';
 import { Book } from 'src/app/types/book';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-library',
@@ -9,7 +9,9 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./library.component.css'],
 })
 export class LibraryComponent implements OnInit {
-  faCoffee = faCheck;
+  faBookmark = faBookmark;
+  faSquareCheck = faSquareCheck;
+
   private booksToShow: number = 9;
   searchQuery: string = '';
   books: Book[] = [];
@@ -18,7 +20,6 @@ export class LibraryComponent implements OnInit {
   buttonLessIsLoading: boolean = false;
   buttonMoreIsLoading: boolean = false;
   isSearching: boolean = false;
-
   currentSearchQuery: string = '';
 
   constructor(private bookService: BookService) {}
