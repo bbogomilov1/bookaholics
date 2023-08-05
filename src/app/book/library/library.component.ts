@@ -24,7 +24,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
   isSearching: boolean = false;
   currentSearchQuery: string = '';
 
-  private booksSubscription: Subscription | null = null;
+  private fetchBooksSubscription: Subscription | null = null;
+  private searchSubscription: Subscription | null = null;
+  private addToReadSubscription: Subscription | null = null;
+  private addToWishlistSubscription: Subscription | null = null;
 
   constructor(
     private libraryService: LibraryService,
@@ -35,11 +38,13 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.fetchBooks();
   }
 
-  addToMyBooks(book: Book) {
+  addToReadBooks(book: Book) {
     book.shelf = 'read';
-    this.bookService.addToBookshelf(book).subscribe((response) => {
-      console.log('Added to My Books:', book.title);
-    });
+    this.addToReadSubscription = this.bookService
+      .addToBookshelf(book)
+      .subscribe((response) => {
+        console.log('Added to My Books:', book.title);
+      });
   }
 
   removeFromMyBooks(book: Book) {
@@ -49,15 +54,17 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   addToWishList(book: Book) {
     book.shelf = 'wishlist';
-    this.bookService.addToBookshelf(book).subscribe((response) => {
-      console.log('Added to Wishlist:', book.title);
-    });
+    this.addToWishlistSubscription = this.bookService
+      .addToBookshelf(book)
+      .subscribe((response) => {
+        console.log('Added to Wishlist:', book.title);
+      });
   }
 
   fetchBooks(searchQuery: string = 'classics') {
     this.currentSearchQuery = searchQuery;
 
-    this.booksSubscription = this.libraryService
+    this.fetchBooksSubscription = this.libraryService
       .searchBooks(searchQuery, this.booksToShow)
       .subscribe(
         (response) => {
@@ -109,7 +116,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
   searchBooks() {
     this.isSearching = true;
 
-    this.booksSubscription = this.libraryService
+    this.searchSubscription = this.libraryService
       .searchBooks(this.searchQuery, this.booksToShow)
       .subscribe(
         (response) => {
@@ -134,6 +141,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.booksSubscription?.unsubscribe();
+    this.fetchBooksSubscription?.unsubscribe();
+    this.searchSubscription?.unsubscribe();
+    this.addToReadSubscription?.unsubscribe();
+    this.addToWishlistSubscription?.unsubscribe();
   }
 }
