@@ -41,11 +41,19 @@
 
       <!-- icons -->
       <div class="icons-container">
-        <button class="btn-icon" (click)="addToReadBooks(book)">
+        <button
+          class="btn-icon"
+          (click)="addToReadBooks(book)"
+          [style.color]="book.shelf === 'read' ? 'rgb(55, 180, 116)' : ''"
+        >
           <fa-icon [icon]="faSquareCheck" />
         </button>
 
-        <button class="btn-icon" (click)="addToWishList(book)">
+        <button
+          class="btn-icon"
+          (click)="addToWishList(book)"
+          [style.color]="book.shelf === 'wishlist' ? 'gold' : ''"
+        >
           <fa-icon [icon]="faBookmark" />
         </button>
       </div>

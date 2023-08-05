@@ -5,7 +5,11 @@
 <ng-template #bookGrid>
   <!-- Books I Want to Read -->
   <div>
-    <h2>Books I Want to Read</h2>
+    <h2><fa-icon [icon]="faBookmark" /> Books I Want to Read</h2>
+
+    <p *ngIf="wishlistBooks.length <= 0">
+      There are no books on your wishlist :(
+    </p>
     <div class="book-container">
       <div *ngFor="let book of wishlistBooks" class="book-item">
         <img
@@ -42,7 +46,10 @@
             <fa-icon [icon]="faSquareCheck" />
           </button>
 
-          <button class="btn-icon">
+          <button
+            class="btn-icon"
+            [style.color]="book.shelf === 'wishlist' ? 'gold' : ''"
+          >
             <fa-icon [icon]="faBookmark" />
           </button>
         </div>
@@ -52,7 +59,9 @@
 
   <!-- Books I've Read -->
   <div>
-    <h2>Books I've Read</h2>
+    <h2><fa-icon [icon]="faSquareCheck" /> Books I've Read</h2>
+    <p *ngIf="readBooks.length <= 0">There are no books on your bookshelf :(</p>
+
     <div class="book-container">
       <div *ngFor="let book of readBooks" class="book-item">
         <img
@@ -85,7 +94,10 @@
 
         <!-- icons -->
         <div class="icons-container">
-          <button class="btn-icon">
+          <button
+            class="btn-icon"
+            [style.color]="book.shelf === 'read' ? 'rgb(55, 180, 116)' : ''"
+          >
             <fa-icon [icon]="faSquareCheck" />
           </button>
 

@@ -29,17 +29,25 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
   fetchBooksFromBookshelf() {
     this.fetchBooksFromBookshelfSubscription = this.bookService
       .getAllBooksFromBookshelf()
-      .subscribe((books) => {
-        console.log(books);
-
-        this.wishlistBooks = Object.values(books).filter(
-          (book) => book.shelf === 'wishlist'
-        );
-        this.readBooks = Object.values(books).filter(
-          (book) => book.shelf === 'read'
-        );
-        this.isLoading = false;
-      });
+      .subscribe(
+        (books) => {
+          this.wishlistBooks = Object.values(books).filter(
+            (book, index, books) =>
+              book.shelf === 'wishlist' &&
+              index === books.findIndex((b) => b.title === book.title)
+          );
+          this.readBooks = Object.values(books).filter(
+            (book, index, books) =>
+              book.shelf === 'read' &&
+              index === books.findIndex((b) => b.title === book.title)
+          );
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching books:', error);
+          this.isLoading = false;
+        }
+      );
   }
 
   ngOnDestroy(): void {
