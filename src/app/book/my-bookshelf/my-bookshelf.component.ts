@@ -11,6 +11,7 @@ export class MyBookshelfComponent implements OnInit {
   books: Book[] = [];
   wishlistBooks: Book[] = [];
   readBooks: Book[] = [];
+  isLoading: boolean = true;
 
   constructor(private bookService: BookService) {}
 
@@ -20,14 +21,13 @@ export class MyBookshelfComponent implements OnInit {
 
   fetchBooksFromBookshelf() {
     this.bookService.getAllBooksFromBookshelf().subscribe((books) => {
-      console.log(books);
-
       this.wishlistBooks = Object.values(books).filter(
         (book) => book.shelf === 'wishlist'
       );
       this.readBooks = Object.values(books).filter(
         (book) => book.shelf === 'read'
       );
+      this.isLoading = false;
     });
   }
 }

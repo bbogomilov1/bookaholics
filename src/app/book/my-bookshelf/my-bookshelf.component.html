@@ -1,34 +1,43 @@
-<!-- Books I Want to Read -->
-<div>
-  <h2>Books I Want to Read</h2>
-  <div class="book-container">
-    <div *ngFor="let book of wishlistBooks" class="book-item">
-      <img
-        *ngIf="book.cover_i; else defaultCover"
-        [src]="'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'"
-        alt="Book Cover"
-      />
+<div *ngIf="isLoading; else bookGrid" class="loader">
+  <app-loader></app-loader>
+</div>
 
-      <!-- Using the default image in case of missing image -->
-      <ng-template #defaultCover>
-        <img src="../assets/missingbook.webp" alt="Default Book Cover" />
-      </ng-template>
+<ng-template #bookGrid>
+  <!-- Books I Want to Read -->
+  <div>
+    <h2>Books I Want to Read</h2>
+    <div class="book-container">
+      <div *ngFor="let book of wishlistBooks" class="book-item">
+        <img
+          *ngIf="book.cover_i; else defaultCover"
+          [src]="
+            'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'
+          "
+          alt="Book Cover"
+        />
 
-      <h2>{{ book.title }}</h2>
-      <p>
-        Author:
-        {{
-          book.author_name ? book.author_name.slice(0, 2).join(", ") : "Unknown"
-        }}
-      </p>
-      <p>Published Date: {{ book.first_publish_year }}</p>
-      <p>
-        Genre:
-        {{ book.subject ? book.subject.slice(0, 3).join(", ") : "-" }}
-      </p>
+        <!-- Using the default image in case of missing image -->
+        <ng-template #defaultCover>
+          <img src="../assets/missingbook.webp" alt="Default Book Cover" />
+        </ng-template>
 
-      <!-- icons -->
-      <!-- <div class="icons-container">
+        <h2>{{ book.title }}</h2>
+        <p>
+          Author:
+          {{
+            book.author_name
+              ? book.author_name.slice(0, 2).join(", ")
+              : "Unknown"
+          }}
+        </p>
+        <p>Published Date: {{ book.first_publish_year }}</p>
+        <p>
+          Genre:
+          {{ book.subject ? book.subject.slice(0, 3).join(", ") : "-" }}
+        </p>
+
+        <!-- icons -->
+        <!-- <div class="icons-container">
             <button class="btn-icon" (click)="addToMyBooks(book)">
               <fa-icon [icon]="faSquareCheck" />
             </button>
@@ -37,41 +46,45 @@
               <fa-icon [icon]="faBookmark" />
             </button>
           </div> -->
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Books I've Read -->
-<div>
-  <h2>Books I've Read</h2>
-  <div class="book-container">
-    <div *ngFor="let book of readBooks" class="book-item">
-      <img
-        *ngIf="book.cover_i; else defaultCover"
-        [src]="'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'"
-        alt="Book Cover"
-      />
+  <!-- Books I've Read -->
+  <div>
+    <h2>Books I've Read</h2>
+    <div class="book-container">
+      <div *ngFor="let book of readBooks" class="book-item">
+        <img
+          *ngIf="book.cover_i; else defaultCover"
+          [src]="
+            'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'
+          "
+          alt="Book Cover"
+        />
 
-      <!-- Using the default image in case of missing image -->
-      <ng-template #defaultCover>
-        <img src="../assets/missingbook.webp" alt="Default Book Cover" />
-      </ng-template>
+        <!-- Using the default image in case of missing image -->
+        <ng-template #defaultCover>
+          <img src="../assets/missingbook.webp" alt="Default Book Cover" />
+        </ng-template>
 
-      <h2>{{ book.title }}</h2>
-      <p>
-        Author:
-        {{
-          book.author_name ? book.author_name.slice(0, 2).join(", ") : "Unknown"
-        }}
-      </p>
-      <p>Published Date: {{ book.first_publish_year }}</p>
-      <p>
-        Genre:
-        {{ book.subject ? book.subject.slice(0, 3).join(", ") : "-" }}
-      </p>
+        <h2>{{ book.title }}</h2>
+        <p>
+          Author:
+          {{
+            book.author_name
+              ? book.author_name.slice(0, 2).join(", ")
+              : "Unknown"
+          }}
+        </p>
+        <p>Published Date: {{ book.first_publish_year }}</p>
+        <p>
+          Genre:
+          {{ book.subject ? book.subject.slice(0, 3).join(", ") : "-" }}
+        </p>
 
-      <!-- icons -->
-      <!-- <div class="icons-container">
+        <!-- icons -->
+        <!-- <div class="icons-container">
             <button class="btn-icon" (click)="addToMyBooks(book)">
               <fa-icon [icon]="faSquareCheck" />
             </button>
@@ -80,6 +93,7 @@
               <fa-icon [icon]="faBookmark" />
             </button>
           </div> -->
+      </div>
     </div>
   </div>
-</div>
+</ng-template>
