@@ -4,4 +4,5 @@ export interface Book {
   first_publish_year: number;
   cover_i?: number | null;
   subject: string[];
+  shelf: 'wishlist' | 'read';
 }

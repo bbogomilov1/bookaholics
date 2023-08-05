@@ -3,6 +3,7 @@ import { Book } from 'src/app/types/book';
 import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { LibraryService } from './library.service';
+import { BookService } from '../book.service';
 
 @Component({
   selector: 'app-library',
@@ -25,15 +26,20 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   private booksSubscription: Subscription | null = null;
 
-  constructor(private libraryService: LibraryService) {}
+  constructor(
+    private libraryService: LibraryService,
+    private bookService: BookService
+  ) {}
 
   ngOnInit() {
     this.fetchBooks();
   }
 
   addToMyBooks(book: Book) {
-    // Implement the logic to add the book to the user's library
-    console.log('Added to My Books:', book.title);
+    book.shelf = 'read';
+    this.bookService.addToBookshelf(book).subscribe((response) => {
+      console.log('Added to My Books:', book.title);
+    });
   }
 
   removeFromMyBooks(book: Book) {
@@ -42,26 +48,24 @@ export class LibraryComponent implements OnInit, OnDestroy {
   }
 
   addToWishList(book: Book) {
-    // Implement the logic to add the book to the user's wish list
-    console.log('Added to Wish List:', book.title);
+    book.shelf = 'wishlist';
+    this.bookService.addToBookshelf(book).subscribe((response) => {
+      console.log('Added to Wishlist:', book.title);
+    });
   }
 
   fetchBooks(searchQuery: string = 'classics') {
     this.currentSearchQuery = searchQuery;
-    console.log('Fetch Books: Search Query:', searchQuery);
 
     this.booksSubscription = this.libraryService
       .searchBooks(searchQuery, this.booksToShow)
       .subscribe(
         (response) => {
-          console.log('Fetch Books: Response:', response);
-
           const fetchedBooks = response.docs.filter(
             (book) =>
               book.title && book.author_name && book.author_name.length > 0
           );
           this.books = fetchedBooks;
-          console.log('Fetch Books: Fetched Books:', this.books);
           this.totalBooks = response.numFound;
           this.isLoading = false;
           this.buttonLessIsLoading = false;
@@ -104,20 +108,17 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   searchBooks() {
     this.isSearching = true;
-    console.log('Search Books: Search Query:', this.searchQuery);
 
     this.booksSubscription = this.libraryService
       .searchBooks(this.searchQuery, this.booksToShow)
       .subscribe(
         (response) => {
-          console.log('Search Books: Response:', response);
           const fetchedBooks = response.docs.filter(
             (book) =>
               book.title && book.author_name && book.author_name.length > 0
           );
 
           this.books = fetchedBooks;
-          console.log('Search Books: Fetched Books:', this.books);
           this.totalBooks = response.numFound;
           this.isLoading = false;
           this.buttonLessIsLoading = false;

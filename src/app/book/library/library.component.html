@@ -8,10 +8,6 @@
   <button (click)="searchBooks()" class="search-btn">Search</button>
 </div>
 
-<!-- <button>
-  <fa-icon [icon]="faCoffee" style="color: #2cd82f"></fa-icon>
-</button> -->
-
 <div *ngIf="isLoading; else bookGrid" class="loader">
   <app-loader></app-loader>
 </div>
@@ -49,12 +45,6 @@
           <fa-icon [icon]="faSquareCheck" />
         </button>
 
-        <!-- Remove from My Books -->
-        <!-- <button class="btn-icon" (click)="removeFromMyBooks(book)">
-          <i class="fas fa-trash"></i>
-        </button> -->
-
-        <!-- Add to Wish List -->
         <button class="btn-icon" (click)="addToWishList(book)">
           <fa-icon [icon]="faBookmark" />
         </button>

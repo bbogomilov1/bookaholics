@@ -1,0 +1,28 @@
+.book-container {
+  display: flex;
+  margin-left: -20px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.book-item {
+  position: relative;
+  width: calc(33.33% - 20px);
+  margin-bottom: 20px;
+  margin-left: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.book-item h2 {
+  margin-top: 0.5rem;
+}
+
+.book-item p {
+  margin: 0;
+}
+
+.book-item img {
+  height: 200px;
+  object-fit: cover;
+}
