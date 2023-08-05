@@ -48,18 +48,20 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   fetchBooks(searchQuery: string = 'classics') {
     this.currentSearchQuery = searchQuery;
+    console.log('Fetch Books: Search Query:', searchQuery);
 
     this.booksSubscription = this.libraryService
       .searchBooks(searchQuery, this.booksToShow)
       .subscribe(
         (response) => {
-          console.log(response);
+          console.log('Fetch Books: Response:', response);
 
           const fetchedBooks = response.docs.filter(
             (book) =>
               book.title && book.author_name && book.author_name.length > 0
           );
           this.books = fetchedBooks;
+          console.log('Fetch Books: Fetched Books:', this.books);
           this.totalBooks = response.numFound;
           this.isLoading = false;
           this.buttonLessIsLoading = false;
@@ -102,16 +104,20 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   searchBooks() {
     this.isSearching = true;
+    console.log('Search Books: Search Query:', this.searchQuery);
 
     this.booksSubscription = this.libraryService
       .searchBooks(this.searchQuery, this.booksToShow)
       .subscribe(
         (response) => {
+          console.log('Search Books: Response:', response);
           const fetchedBooks = response.docs.filter(
             (book) =>
               book.title && book.author_name && book.author_name.length > 0
           );
+
           this.books = fetchedBooks;
+          console.log('Search Books: Fetched Books:', this.books);
           this.totalBooks = response.numFound;
           this.isLoading = false;
           this.buttonLessIsLoading = false;
