@@ -129,7 +129,11 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
           this.bookshelfBooks = Object.values(books);
 
-          this.fetchBooks();
+          if (this.searchQuery === '' || this.searchQuery === 'classics') {
+            this.fetchBooks();
+          } else {
+            this.searchBooks();
+          }
 
           this.books.forEach((book) => {
             const currBook = this.bookshelfBooks.find(
@@ -140,7 +144,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
               book.shelf = currBook.shelf;
             }
           });
-          this.isLoading = false;
+          // this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching books:', error);
@@ -152,28 +156,53 @@ export class LibraryComponent implements OnInit, OnDestroy {
   searchBooks() {
     this.isSearching = true;
 
-    this.searchSubscription = this.libraryService
-      .searchBooks(this.searchQuery, this.booksToShow)
-      .subscribe(
-        (response) => {
-          const fetchedBooks = response.docs.filter(
-            (book) =>
-              book.title && book.author_name && book.author_name.length > 0
-          );
-
-          this.books = fetchedBooks;
-          this.totalBooks = response.numFound;
-          this.isLoading = false;
-          this.buttonLessIsLoading = false;
-          this.buttonMoreIsLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching books:', error);
-          this.isLoading = false;
-          this.buttonLessIsLoading = false;
-          this.buttonMoreIsLoading = false;
+    this.fetchBooksFromBookshelfSubscription = this.bookService
+      .getAllBooksFromBookshelf()
+      .subscribe((books) => {
+        if (!books) {
+          books = {};
         }
-      );
+
+        this.bookshelfBooks = Object.values(books);
+
+        this.searchSubscription = this.libraryService
+          .searchBooks(this.searchQuery, this.booksToShow)
+          .subscribe(
+            (response) => {
+              const fetchedBooks = response.docs.filter(
+                (book) =>
+                  book.title && book.author_name && book.author_name.length > 0
+              );
+
+              const bookshelfTitles = new Set(
+                this.bookshelfBooks.map((book) => book.title)
+              );
+
+              fetchedBooks.forEach((book) => {
+                if (bookshelfTitles.has(book.title)) {
+                  const currBook = this.bookshelfBooks.find(
+                    (b) => b.title === book.title
+                  );
+                  if (currBook) {
+                    book.shelf = currBook.shelf;
+                  }
+                }
+              });
+
+              this.books = fetchedBooks;
+              this.totalBooks = response.numFound;
+              this.isLoading = false;
+              this.buttonLessIsLoading = false;
+              this.buttonMoreIsLoading = false;
+            },
+            (error) => {
+              console.error('Error fetching books:', error);
+              this.isLoading = false;
+              this.buttonLessIsLoading = false;
+              this.buttonMoreIsLoading = false;
+            }
+          );
+      });
   }
 
   loadLessBooks() {
@@ -184,22 +213,14 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.buttonLessIsLoading = true;
     this.booksToShow -= 9;
 
-    if (!this.isSearching) {
-      this.fetchBooks(this.currentSearchQuery);
-    } else {
-      this.searchBooks();
-    }
+    this.fetchBooksFromBookshelf();
   }
 
   loadMoreBooks() {
     this.buttonMoreIsLoading = true;
     this.booksToShow += 9;
 
-    if (!this.isSearching) {
-      this.fetchBooks(this.currentSearchQuery);
-    } else {
-      this.searchBooks();
-    }
+    this.fetchBooksFromBookshelf();
   }
 
   ngOnDestroy(): void {
