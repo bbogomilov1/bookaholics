@@ -123,6 +123,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .getAllBooksFromBookshelf()
       .subscribe(
         (books) => {
+          if (!books) {
+            books = {};
+          }
+
           this.bookshelfBooks = Object.values(books);
 
           this.fetchBooks();

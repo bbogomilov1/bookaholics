@@ -46,6 +46,12 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
         (error) => {
           console.error('Error fetching books:', error);
           this.isLoading = false;
+        },
+        () => {
+          // Check if the books array is empty and set isLoading to false
+          if (this.wishlistBooks.length === 0 || this.readBooks.length === 0) {
+            this.isLoading = false;
+          }
         }
       );
   }

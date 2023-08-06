@@ -7,7 +7,7 @@
   <div>
     <h2><fa-icon [icon]="faBookmark" /> Books I Want to Read</h2>
 
-    <p *ngIf="wishlistBooks.length <= 0">
+    <p *ngIf="wishlistBooks.length <= 0" class="no-books">
       There are no books on your wishlist :(
     </p>
     <div class="book-container">
@@ -60,7 +60,9 @@
   <!-- Books I've Read -->
   <div>
     <h2><fa-icon [icon]="faSquareCheck" /> Books I've Read</h2>
-    <p *ngIf="readBooks.length <= 0">There are no books on your bookshelf :(</p>
+    <p *ngIf="readBooks.length <= 0" class="no-books">
+      There are no books on your bookshelf :(
+    </p>
 
     <div class="book-container">
       <div *ngFor="let book of readBooks" class="book-item">
