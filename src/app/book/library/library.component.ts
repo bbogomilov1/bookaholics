@@ -42,6 +42,15 @@ export class LibraryComponent implements OnInit, OnDestroy {
   }
 
   addToReadBooks(book: Book) {
+    const bookIsAdded = this.bookshelfBooks.filter(
+      (b) => b.title === book.title
+    );
+    console.log(book.title);
+    console.log(bookIsAdded);
+
+    if (!bookIsAdded) {
+      return;
+    }
     book.shelf = 'read';
     this.addToReadSubscription = this.bookService
       .addToBookshelf(book)
@@ -90,13 +99,13 @@ export class LibraryComponent implements OnInit, OnDestroy {
           );
 
           const bookshelfTitles = new Set(
-            this.bookshelfBooks.map((book) => book.title)
+            this.bookshelfBooks.map((book) => book._version_)
           );
 
           fetchedBooks.forEach((book) => {
-            if (bookshelfTitles.has(book.title)) {
+            if (bookshelfTitles.has(book._version_)) {
               const currBook = this.bookshelfBooks.find(
-                (b) => b.title === book.title
+                (b) => b._version_ === book._version_
               );
               if (currBook) {
                 book.shelf = currBook.shelf;

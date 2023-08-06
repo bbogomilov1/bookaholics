@@ -5,4 +5,5 @@ export interface Book {
   cover_i?: number | null;
   subject: string[];
   shelf: 'wishlist' | 'read';
+  _version_: string;
 }
