@@ -43,7 +43,7 @@
       <div class="icons-container">
         <button
           class="btn-icon"
-          (click)="addToReadBooks(book)"
+          (click)="toggleReadStatus(book)"
           [style.color]="book.shelf === 'read' ? 'rgb(55, 180, 116)' : ''"
         >
           <fa-icon [icon]="faSquareCheck" />

@@ -41,12 +41,18 @@ export class LibraryComponent implements OnInit, OnDestroy {
     // this.fetchBooks();
   }
 
+  toggleReadStatus(book: Book) {
+    if (book.shelf === 'read') {
+      this.removeFromReadBooks(book);
+    } else {
+      this.addToReadBooks(book);
+    }
+  }
+
   addToReadBooks(book: Book) {
     const bookIsAdded = this.bookshelfBooks.filter(
       (b) => b.title === book.title
     );
-    console.log(book.title);
-    console.log(bookIsAdded);
 
     if (!bookIsAdded) {
       return;
@@ -66,13 +72,38 @@ export class LibraryComponent implements OnInit, OnDestroy {
       );
   }
 
-  removeFromMyBooks(book: Book) {
-    // Implement the logic to remove the book from the user's library
-    console.log('Removed from My Books:', book.title);
+  removeFromReadBooks(book: Book) {
+    if (book.shelf !== 'read') {
+      return;
+    }
+
+    this.addToReadSubscription = this.bookService
+      .removeFromBookshelf(book)
+      .subscribe(
+        (response) => {
+          console.log('Removed from My Books:', book.title);
+          // Once the book is successfully removed from the bookshelf, set its shelf to an empty string
+          book.shelf = '';
+        },
+        (error) => {
+          console.error('Error removing book:', error);
+          // If there's an error, set the shelf back to 'read'
+          book.shelf = 'read';
+        }
+      );
   }
 
   addToWishList(book: Book) {
+    const bookIsAdded = this.bookshelfBooks.filter(
+      (b) => b.title === book.title
+    );
+
+    if (!bookIsAdded) {
+      return;
+    }
+
     book.shelf = 'wishlist';
+
     this.addToWishlistSubscription = this.bookService
       .addToBookshelf(book)
       .subscribe(
