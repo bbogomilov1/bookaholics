@@ -77,20 +77,17 @@ export class LibraryComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.addToReadSubscription = this.bookService
-      .removeFromBookshelf(book)
-      .subscribe(
-        (response) => {
-          console.log('Removed from My Books:', book.title);
-          // Once the book is successfully removed from the bookshelf, set its shelf to an empty string
-          book.shelf = '';
-        },
-        (error) => {
-          console.error('Error removing book:', error);
-          // If there's an error, set the shelf back to 'read'
-          book.shelf = 'read';
-        }
-      );
+    this.bookService.removeFromBookshelf(book).subscribe(
+      (response) => {
+        console.log('Removed from My Books:', book.title);
+        book.shelf = '';
+      },
+      (error) => {
+        console.error('Error removing book:', error);
+        // If there's an error, set the shelf back to 'read'
+        book.shelf = 'read';
+      }
+    );
   }
 
   addToWishList(book: Book) {
