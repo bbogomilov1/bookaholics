@@ -99,6 +99,7 @@
           <button
             class="btn-icon"
             [style.color]="book.shelf === 'read' ? 'rgb(55, 180, 116)' : ''"
+            (click)="removeFromReadBooks(book)"
           >
             <fa-icon [icon]="faSquareCheck" />
           </button>

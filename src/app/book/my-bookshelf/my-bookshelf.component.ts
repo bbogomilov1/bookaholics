@@ -26,6 +26,30 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
     this.fetchBooksFromBookshelf();
   }
 
+  removeFromReadBooks(book: Book) {
+    if (book.shelf !== 'read') {
+      return;
+    }
+
+    this.bookService.removeFromBookshelf(book).subscribe(
+      (response) => {
+        console.log('Removed from My Books:', book.title);
+
+        const bookIndex = this.readBooks.findIndex(
+          (b) => b._version_ === book._version_
+        );
+        if (bookIndex !== -1) {
+          this.readBooks.splice(bookIndex, 1);
+        }
+      },
+      (error) => {
+        console.error('Error removing book:', error);
+        // If there's an error, set the shelf back to 'read'
+        book.shelf = 'read';
+      }
+    );
+  }
+
   fetchBooksFromBookshelf() {
     this.fetchBooksFromBookshelfSubscription = this.bookService
       .getAllBooksFromBookshelf()
@@ -48,7 +72,6 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         () => {
-          // Check if the books array is empty and set isLoading to false
           if (this.wishlistBooks.length === 0 || this.readBooks.length === 0) {
             this.isLoading = false;
           }
