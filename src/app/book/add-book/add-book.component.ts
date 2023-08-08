@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BookService } from '../book.service';
 import { Book } from 'src/app/types/book';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
 
 @Component({
@@ -18,7 +19,8 @@ export class AddBookComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private bookService: BookService
+    private bookService: BookService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -58,6 +60,7 @@ export class AddBookComponent implements OnInit, OnDestroy {
         console.log('Book added successfully:', response);
 
         this.bookForm.reset();
+        this.router.navigate(['/my-bookshelf']);
       },
       (error) => {
         // Handle error, if any
