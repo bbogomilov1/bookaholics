@@ -49,15 +49,17 @@ export class LibraryComponent implements OnInit, OnDestroy {
     }
   }
 
-  addToReadBooks(book: Book) {
-    const bookIsAdded = this.bookshelfBooks.filter(
-      (b) => b.title === book.title
-    );
-
-    if (!bookIsAdded) {
-      return;
+  toggleWishlistStatus(book: Book) {
+    if (book.shelf === 'wishlist') {
+      this.removeFromWishlistBooks(book);
+    } else {
+      this.addToWishlistBooks(book);
     }
+  }
+
+  addToReadBooks(book: Book) {
     book.shelf = 'read';
+
     this.addToReadSubscription = this.bookService
       .addToBookshelf(book)
       .subscribe(
@@ -90,15 +92,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     );
   }
 
-  addToWishList(book: Book) {
-    const bookIsAdded = this.bookshelfBooks.filter(
-      (b) => b.title === book.title
-    );
-
-    if (!bookIsAdded) {
-      return;
-    }
-
+  addToWishlistBooks(book: Book) {
     book.shelf = 'wishlist';
 
     this.addToWishlistSubscription = this.bookService
@@ -112,6 +106,24 @@ export class LibraryComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       );
+  }
+
+  removeFromWishlistBooks(book: Book) {
+    if (book.shelf !== 'wishlist') {
+      return;
+    }
+
+    this.bookService.removeFromBookshelf(book).subscribe(
+      (response) => {
+        console.log('Removed from My Books:', book.title);
+        book.shelf = '';
+      },
+      (error) => {
+        console.error('Error removing book:', error);
+        // If there's an error, set the shelf back to 'read'
+        book.shelf = 'read';
+      }
+    );
   }
 
   fetchBooks(searchQuery: string = 'classics') {

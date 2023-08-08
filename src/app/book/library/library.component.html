@@ -51,7 +51,7 @@
 
         <button
           class="btn-icon"
-          (click)="addToWishList(book)"
+          (click)="toggleWishlistStatus(book)"
           [style.color]="book.shelf === 'wishlist' ? 'gold' : ''"
         >
           <fa-icon [icon]="faBookmark" />
