@@ -14,6 +14,10 @@ import { v4 as uuid } from 'uuid';
 export class AddBookComponent implements OnInit, OnDestroy {
   bookForm!: FormGroup;
   uuid: string = uuid();
+  yearsRange: number[] = this.generateYearsRange(
+    1800,
+    new Date().getFullYear()
+  );
 
   private bookSubscription: Subscription | null = null;
 
@@ -67,6 +71,14 @@ export class AddBookComponent implements OnInit, OnDestroy {
         console.error('Error adding book:', error);
       }
     );
+  }
+
+  generateYearsRange(startYear: number, endYear: number): number[] {
+    const years = [];
+    for (let year = startYear; year <= endYear; year++) {
+      years.push(year);
+    }
+    return years;
   }
 
   ngOnDestroy(): void {
