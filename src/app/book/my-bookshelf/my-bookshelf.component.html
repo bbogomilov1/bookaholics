@@ -49,6 +49,7 @@
           <button
             class="btn-icon"
             [style.color]="book.shelf === 'wishlist' ? 'gold' : ''"
+            (click)="removeFromWishlistBooks(book)"
           >
             <fa-icon [icon]="faBookmark" />
           </button>

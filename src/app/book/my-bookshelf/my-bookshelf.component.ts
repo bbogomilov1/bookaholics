@@ -50,6 +50,30 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
     );
   }
 
+  removeFromWishlistBooks(book: Book) {
+    if (book.shelf !== 'wishlist') {
+      return;
+    }
+
+    this.bookService.removeFromBookshelf(book).subscribe(
+      (response) => {
+        console.log('Removed from My Books:', book.title);
+
+        const bookIndex = this.wishlistBooks.findIndex(
+          (b) => b._version_ === book._version_
+        );
+        if (bookIndex !== -1) {
+          this.wishlistBooks.splice(bookIndex, 1);
+        }
+      },
+      (error) => {
+        console.error('Error removing book:', error);
+        // If there's an error, set the shelf back to 'read'
+        book.shelf = 'wishlist';
+      }
+    );
+  }
+
   fetchBooksFromBookshelf() {
     this.fetchBooksFromBookshelfSubscription = this.bookService
       .getAllBooksFromBookshelf()
