@@ -57,4 +57,9 @@ export class BookService {
     const url = `${this.firebaseUrl}/bookshelf.json`;
     return this.http.get<{ [key: string]: Book }>(url);
   }
+
+  getAllBooksFromBooks(): Observable<{ [key: string]: Book }> {
+    const url = `${this.firebaseUrl}/books.json`;
+    return this.http.get<{ [key: string]: Book }>(url);
+  }
 }

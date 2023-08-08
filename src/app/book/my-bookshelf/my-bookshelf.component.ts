@@ -103,6 +103,26 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
       );
   }
 
+  fetchBooksFromBooks() {
+    this.fetchBooksFromBookshelfSubscription = this.bookService
+      .getAllBooksFromBooks()
+      .subscribe(
+        (books) => {
+          this.books = Object.values(books);
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching books:', error);
+          this.isLoading = false;
+        }
+        // () => {
+        //   if (this.books.length === 0) {
+        //     this.isLoading = false;
+        //   }
+        // }
+      );
+  }
+
   ngOnDestroy(): void {
     this.fetchBooksFromBookshelfSubscription?.unsubscribe();
   }
