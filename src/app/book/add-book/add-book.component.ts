@@ -30,6 +30,7 @@ export class AddBookComponent implements OnInit, OnDestroy {
       author: ['', Validators.required],
       publishedDate: ['', Validators.required],
       genre: ['', Validators.required],
+      shelf: ['', Validators.required],
     });
   }
 

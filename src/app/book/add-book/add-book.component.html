@@ -26,6 +26,13 @@
       <label for="genre">Genre</label>
       <input type="text" id="genre" formControlName="genre" required />
     </div>
+    <div class="form-group">
+      <label for="shelf">Have you read it or is it in your wishlist?</label>
+      <select id="shelf" formControlName="shelf" required>
+        <option value="read">I have read it</option>
+        <option value="wishlist">It's on my wishlist</option>
+      </select>
+    </div>
 
     <div class="form-actions">
       <button type="submit">Add Book</button>
