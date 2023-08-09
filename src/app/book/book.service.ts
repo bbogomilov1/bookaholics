@@ -45,7 +45,7 @@ export class BookService {
 
   getAllBooks(): Observable<{ [key: string]: Book }> {
     const url = `${this.firebaseUrl}/books.json`;
-    return this.http.get<{ [key: string]: Book }>(url);
+    return this.http.get<{ [key: string]: Book }>(this.firebaseUrl);
   }
 
   addToBookshelf(book: Book): Observable<any> {

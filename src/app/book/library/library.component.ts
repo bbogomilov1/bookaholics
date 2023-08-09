@@ -142,21 +142,40 @@ export class LibraryComponent implements OnInit, OnDestroy {
             this.bookshelfBooks.map((book) => book._version_)
           );
 
-          fetchedBooks.forEach((book) => {
-            if (bookshelfTitles.has(book._version_)) {
-              const currBook = this.bookshelfBooks.find(
-                (b) => b._version_ === book._version_
-              );
-              if (currBook) {
-                book.shelf = currBook.shelf;
-              }
+          // Fetch manually added books from Firebase
+          this.bookService.getAllBooksFromBookshelf().subscribe(
+            (manuallyAddedBooks) => {
+              // Combine fetchedBooks and manuallyAddedBooks
+              const allBooks = [
+                ...Object.values(manuallyAddedBooks),
+                ...fetchedBooks,
+              ];
+
+              // Update the 'shelf' property for books in 'bookshelfBooks'
+              allBooks.forEach((book) => {
+                if (bookshelfTitles.has(book._version_)) {
+                  const currBook = this.bookshelfBooks.find(
+                    (b) => b._version_ === book._version_
+                  );
+                  if (currBook) {
+                    book.shelf = currBook.shelf;
+                  }
+                }
+              });
+
+              this.books = allBooks;
+              this.totalBooks = response.numFound;
+              this.isLoading = false;
+              this.buttonLessIsLoading = false;
+              this.buttonMoreIsLoading = false;
+            },
+            (error) => {
+              console.error('Error fetching manually added books:', error);
+              this.isLoading = false;
+              this.buttonLessIsLoading = false;
+              this.buttonMoreIsLoading = false;
             }
-          });
-          this.books = fetchedBooks;
-          this.totalBooks = response.numFound;
-          this.isLoading = false;
-          this.buttonLessIsLoading = false;
-          this.buttonMoreIsLoading = false;
+          );
         },
         (error) => {
           console.error('Error fetching books:', error);
@@ -186,7 +205,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
           this.books.forEach((book) => {
             const currBook = this.bookshelfBooks.find(
-              (b) => b.title === book.title
+              (b) => b._version_ === book._version_
             );
 
             if (currBook) {
