@@ -38,34 +38,15 @@ export class RegisterComponent {
       return;
     }
 
-    const {
-      username,
-      email,
-      passGroup: { password, rePassword } = {},
-    } = this.form.value;
+    const { username, email, passGroup: { password } = {} } = this.form.value;
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        // Add any other headers you need, e.g., authorization token
-      }),
-    };
+    if (!password) {
+      // Handle the case where password is empty
+      return;
+    }
 
-    const requestBody = {
-      username: username!,
-      email: email!,
-      password: password!,
-      rePassword: rePassword!,
-    };
-
-    this.http
-      .post<any>(
-        'https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json',
-        requestBody,
-        httpOptions
-      )
-      .subscribe(() => {
-        this.router.navigate(['/']);
-      });
+    this.userService.register(username!, email!, password).subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 }

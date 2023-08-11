@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { User } from '../types/user';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Subscription, tap } from 'rxjs';
 
 @Injectable({
@@ -31,20 +31,24 @@ export class UserService implements OnDestroy {
   //     .pipe(tap((user) => this.user$$.next(user)));
   // }
 
-  register(
-    username: string,
-    email: string,
-    password: string,
-    rePassword: string
-  ) {
-    return this.http
-      .post<User>(`${this.firebaseUrl}/users`, {
-        username,
-        email,
-        password,
-        rePassword,
-      })
-      .pipe(tap((user) => this.user$$.next(user)));
+  register(username: string, email: string, password: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    const requestBody = {
+      username: username!,
+      email: email!,
+      password: password!,
+    };
+
+    return this.http.post<any>(
+      `${this.firebaseUrl}/users.json`,
+      requestBody,
+      httpOptions
+    );
   }
 
   // logout() {
