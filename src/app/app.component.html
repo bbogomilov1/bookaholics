@@ -12,12 +12,17 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <div class="navbar-nav navbar">
+    <div class="navbar-nav navbar" *ngIf="isLogged$ | async">
       <a class="nav-link" routerLink="">Home</a>
       <a class="nav-link" routerLink="library">Library</a>
       <a class="nav-link" routerLink="my-bookshelf">My Bookshelf</a>
       <a class="nav-link" routerLink="add-book">Add Book</a>
       <a class="nav-link" routerLink="edit-book">Edit Book</a>
+      <a class="nav-link" routerLink="/" (click)="logout()">Logout</a>
+    </div>
+    <div class="navbar-nav navbar" *ngIf="!(isLogged$ | async)">
+      <a class="nav-link" routerLink="">Home</a>
+      <a class="nav-link" routerLink="library">Library</a>
       <a class="nav-link" routerLink="user/login">Login</a>
       <a class="nav-link" routerLink="user/register">Register</a>
     </div>

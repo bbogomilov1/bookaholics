@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { User } from 'src/app/types/user';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private http: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {}
@@ -44,6 +46,7 @@ export class LoginComponent implements OnInit {
 
         if (user && user.password === password) {
           this.cookieService.set('currentUser', JSON.stringify(user), 1);
+          this.authService.login();
           console.log('Logged in successfully');
           this.router.navigate(['/']);
         } else {

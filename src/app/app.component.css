@@ -6,3 +6,10 @@
   background-color: #fdf0d9;
   margin-bottom: 20px;
 }
+
+.nav-username {
+  position: absolute;
+  right: 70px;
+  text-decoration: none;
+  color: #58544c;
+}

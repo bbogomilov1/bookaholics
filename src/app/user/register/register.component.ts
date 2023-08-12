@@ -6,6 +6,7 @@ import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from 'src/app/types/user';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,7 @@ import { User } from 'src/app/types/user';
 export class RegisterComponent {
   form = this.fb.group({
     username: ['', [Validators.required]],
-    email: ['', [Validators.required, appEmailValidator]],
+    email: ['', [Validators.required, appEmailValidator()]],
     passGroup: this.fb.group(
       {
         password: ['', [Validators.required, Validators.minLength(5)]],
@@ -32,7 +33,8 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cookieService: CookieService
   ) {}
 
   register() {
@@ -64,6 +66,13 @@ export class RegisterComponent {
         this.userService
           .register(username!, email!, password!)
           .subscribe(() => {
+            const currentUser = { username, email };
+            this.cookieService.set(
+              'currentUser',
+              JSON.stringify(currentUser),
+              1
+            );
+
             this.router.navigate(['/']);
           });
       },

@@ -10,10 +10,10 @@ import { EditBookComponent } from './book/edit-book/edit-book.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './book/library/library.component';
-import { LoaderComponent } from './shared/loader/loader.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MyBookshelfComponent } from './book/my-bookshelf/my-bookshelf.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,6 @@ import { MyBookshelfComponent } from './book/my-bookshelf/my-bookshelf.component
     LoginComponent,
     RegisterComponent,
     LibraryComponent,
-    LoaderComponent,
     MyBookshelfComponent,
   ],
   imports: [
@@ -32,6 +31,7 @@ import { MyBookshelfComponent } from './book/my-bookshelf/my-bookshelf.component
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    SharedModule,
     FontAwesomeModule,
     ReactiveFormsModule,
   ],

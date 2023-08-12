@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../types/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
@@ -9,17 +9,18 @@ import {
   map,
   tap,
 } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService implements OnDestroy {
+export class UserService implements OnInit, OnDestroy {
   private firebaseUrl = 'https://bookaholics-966d8-default-rtdb.firebaseio.com';
 
   private user$$ = new BehaviorSubject<User | undefined>(undefined);
   public user$ = this.user$$.asObservable();
 
   user: User | undefined;
-  // USER_KEY = '[user]';
+  USER_KEY = '[user]';
 
   get isLogged(): boolean {
     return !!this.user;
@@ -27,34 +28,22 @@ export class UserService implements OnDestroy {
 
   subscription: Subscription;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private cookieService: CookieService) {
     this.subscription = this.user$.subscribe((user) => (this.user = user));
+  }
+
+  ngOnInit(): void {
+    const storedUser = this.cookieService.get('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      this.user$$.next(user);
+    }
   }
 
   login(email: string, password: string) {
     return this.http
       .post<User>(`${this.firebaseUrl}/users.json`, { email, password })
       .pipe(tap((user) => this.user$$.next(user)));
-  }
-
-  checkEmail(email: string) {
-    const queryParams = `?orderBy="email"&equalTo="${email}"`;
-    return this.http
-      .get<{ [key: string]: User }>(
-        `${this.firebaseUrl}/users.json${queryParams}`
-      )
-      .pipe(
-        map((response) => {
-          // Convert the response to an array of users
-          const users: User[] = Object.values(response);
-          // Check if any user with the given email exists
-          return users.length > 0;
-        }),
-        catchError((error) => {
-          console.error('Error checking email:', error);
-          return [];
-        })
-      );
   }
 
   getAllUsers(): Observable<User[]> {
@@ -81,11 +70,10 @@ export class UserService implements OnDestroy {
       .pipe(tap((user) => this.user$$.next(user)));
   }
 
-  // logout() {
-  //   return this.http
-  //     .post<User>('/api/logout', {})
-  //     .pipe(tap(() => this.user$$.next(undefined)));
-  // }
+  logout() {
+    this.cookieService.delete('currentUser');
+    this.user$$.next(undefined);
+  }
 
   // getProfile() {
   //   return this.http
