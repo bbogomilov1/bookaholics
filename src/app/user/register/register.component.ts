@@ -5,6 +5,7 @@ import { appEmailValidator } from 'src/app/shared/validators/app-email-validator
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { User } from 'src/app/types/user';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,7 @@ export class RegisterComponent {
       }
     ),
   });
+  allUsersResponse = {};
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +35,7 @@ export class RegisterComponent {
     private http: HttpClient
   ) {}
 
-  async register() {
+  register() {
     if (this.form.invalid) {
       return;
     }
@@ -44,26 +46,31 @@ export class RegisterComponent {
       return;
     }
 
-    try {
-      const allUsersResponse = await this.userService.getAllUsers().toPromise();
+    this.userService.getAllUsers().subscribe(
+      (allUsersResponse: User[]) => {
+        const userEmailsSet = new Set<string>();
 
-      const userEmailsSet = new Set<string>();
-      for (const userId in allUsersResponse) {
-        if (allUsersResponse[userId]?.email) {
-          userEmailsSet.add(allUsersResponse[userId].email);
+        for (const user of allUsersResponse) {
+          if (user.email) {
+            userEmailsSet.add(user.email);
+          }
         }
-      }
 
-      if (email && userEmailsSet.has(email)) {
-        console.log('Email already exists');
-        return;
-      }
+        if (email && userEmailsSet.has(email)) {
+          console.log('Email already exists');
+          return;
+        }
 
-      this.userService.register(username!, email!, password!).subscribe(() => {
-        this.router.navigate(['/']);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+        this.userService
+          .register(username!, email!, password!)
+          .subscribe(() => {
+            this.router.navigate(['/']);
+          });
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+        // Handle error if needed
+      }
+    );
   }
 }

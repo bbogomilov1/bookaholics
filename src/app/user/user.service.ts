@@ -31,11 +31,11 @@ export class UserService implements OnDestroy {
     this.subscription = this.user$.subscribe((user) => (this.user = user));
   }
 
-  // login(email: string, password: string) {
-  //   return this.http
-  //     .post<User>('/api/login', { email, password })
-  //     .pipe(tap((user) => this.user$$.next(user)));
-  // }
+  login(email: string, password: string) {
+    return this.http
+      .post<User>(`${this.firebaseUrl}/users.json`, { email, password })
+      .pipe(tap((user) => this.user$$.next(user)));
+  }
 
   checkEmail(email: string) {
     const queryParams = `?orderBy="email"&equalTo="${email}"`;
@@ -57,10 +57,10 @@ export class UserService implements OnDestroy {
       );
   }
 
-  getAllUsers(): Observable<{ [key: string]: any }> {
+  getAllUsers(): Observable<User[]> {
     return this.http
       .get<{ [key: string]: any }>(`${this.firebaseUrl}/users.json`)
-      .pipe();
+      .pipe(map((response) => Object.values(response)));
   }
 
   register(username: string, email: string, password: string) {

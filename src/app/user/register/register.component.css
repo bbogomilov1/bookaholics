@@ -48,3 +48,14 @@
 .form-actions button:hover {
   background-color: #bd8a47;
 }
+
+.form-actions p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: dimgray;
+}
+
+a {
+  text-decoration: none;
+  color: #b4782b;
+}
