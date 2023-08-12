@@ -18,18 +18,6 @@ export class AppComponent {
     private cookieService: CookieService
   ) {}
 
-  private checkCookie(name: string): boolean {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-      const [cookieName] = cookie.split('=');
-
-      if (cookieName.trim() === name) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   logout(): void {
     this.cookieService.delete('currentUser');
     this.authService.logout();

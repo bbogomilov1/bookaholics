@@ -8,6 +8,7 @@ import {
   catchError,
   map,
   tap,
+  of,
 } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 @Injectable({
@@ -49,10 +50,39 @@ export class UserService implements OnInit, OnDestroy {
   getAllUsers(): Observable<User[]> {
     return this.http
       .get<{ [key: string]: any }>(`${this.firebaseUrl}/users.json`)
-      .pipe(map((response) => Object.values(response)));
+      .pipe(
+        map((response) => {
+          if (response === null) {
+            return []; // Return an empty array if response is null
+          }
+          return Object.values(response);
+        }),
+        catchError((error) => {
+          console.error('Error fetching users:', error);
+          return of([]); // Return an empty array in case of error
+        })
+      );
   }
 
-  register(username: string, email: string, password: string) {
+  getLoggedInUserEmail(): string {
+    return this.cookieService.get('currentUser');
+  }
+
+  // updateUser(user: User): Observable<User> {
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type': 'application/json',
+  //     }),
+  //   };
+
+  //   return this.http.put<User>(
+  //     `${this.firebaseUrl}/users/${user.id}.json`,
+  //     user,
+  //     httpOptions
+  //   );
+  // }
+
+  register(userId: string, username: string, email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -60,6 +90,7 @@ export class UserService implements OnInit, OnDestroy {
     };
 
     const requestBody = {
+      id: userId,
       username: username!,
       email: email!,
       password: password!,

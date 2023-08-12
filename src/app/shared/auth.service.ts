@@ -14,12 +14,10 @@ export class AuthService {
   constructor(private cookieService: CookieService) {}
 
   login(): void {
-    // Perform login logic here
     this.isLoggedSubject.next(true);
   }
 
   logout(): void {
-    // Perform logout logic here
     this.isLoggedSubject.next(false);
   }
 }

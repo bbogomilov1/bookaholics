@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from 'src/app/types/user';
 import { CookieService } from 'ngx-cookie-service';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-register',
@@ -48,8 +49,13 @@ export class RegisterComponent {
       return;
     }
 
+    const userId = uuid();
+
     this.userService.getAllUsers().subscribe(
       (allUsersResponse: User[]) => {
+        if (allUsersResponse.length === 0) {
+          allUsersResponse = [];
+        }
         const userEmailsSet = new Set<string>();
 
         for (const user of allUsersResponse) {
@@ -64,9 +70,11 @@ export class RegisterComponent {
         }
 
         this.userService
-          .register(username!, email!, password!)
+          .register(userId, username!, email!, password!)
           .subscribe(() => {
             const currentUser = { username, email };
+            console.log(currentUser);
+
             this.cookieService.set(
               'currentUser',
               JSON.stringify(currentUser),

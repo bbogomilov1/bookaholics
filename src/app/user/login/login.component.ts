@@ -45,7 +45,10 @@ export class LoginComponent implements OnInit {
         const user = allUsersResponse.find((user) => user.email === email);
 
         if (user && user.password === password) {
-          this.cookieService.set('currentUser', JSON.stringify(user), 1);
+          this.cookieService.set(
+            'currentUser',
+            JSON.stringify({ email: user.email, username: user.username })
+          );
           this.authService.login();
           console.log('Logged in successfully');
           this.router.navigate(['/']);

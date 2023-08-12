@@ -4,6 +4,7 @@ import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { LibraryService } from './library.service';
 import { BookService } from '../book.service';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-library',
@@ -33,7 +34,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   constructor(
     private libraryService: LibraryService,
-    private bookService: BookService
+    private bookService: BookService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -56,6 +58,18 @@ export class LibraryComponent implements OnInit, OnDestroy {
       this.addToWishlistBooks(book);
     }
   }
+
+  // getLoggedInUserEmail(): string | null {
+  //   const cookies = document.cookie.split('; ');
+  //   for (const cookie of cookies) {
+  //     const [name, value] = cookie.split('=');
+  //     if (name === 'user') {
+  //       const user = JSON.parse(decodeURIComponent(value));
+  //       return user.email;
+  //     }
+  //   }
+  //   return null;
+  // }
 
   addToReadBooks(book: Book) {
     book.shelf = 'read';
