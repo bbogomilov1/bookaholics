@@ -1,8 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { User } from '../types/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Subscription, tap } from 'rxjs';
-
+import {
+  BehaviorSubject,
+  Observable,
+  Subscription,
+  catchError,
+  map,
+  tap,
+} from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +19,7 @@ export class UserService implements OnDestroy {
   public user$ = this.user$$.asObservable();
 
   user: User | undefined;
-  USER_KEY = '[user]';
+  // USER_KEY = '[user]';
 
   get isLogged(): boolean {
     return !!this.user;
@@ -31,6 +37,32 @@ export class UserService implements OnDestroy {
   //     .pipe(tap((user) => this.user$$.next(user)));
   // }
 
+  checkEmail(email: string) {
+    const queryParams = `?orderBy="email"&equalTo="${email}"`;
+    return this.http
+      .get<{ [key: string]: User }>(
+        `${this.firebaseUrl}/users.json${queryParams}`
+      )
+      .pipe(
+        map((response) => {
+          // Convert the response to an array of users
+          const users: User[] = Object.values(response);
+          // Check if any user with the given email exists
+          return users.length > 0;
+        }),
+        catchError((error) => {
+          console.error('Error checking email:', error);
+          return [];
+        })
+      );
+  }
+
+  getAllUsers(): Observable<{ [key: string]: any }> {
+    return this.http
+      .get<{ [key: string]: any }>(`${this.firebaseUrl}/users.json`)
+      .pipe();
+  }
+
   register(username: string, email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -44,11 +76,9 @@ export class UserService implements OnDestroy {
       password: password!,
     };
 
-    return this.http.post<any>(
-      `${this.firebaseUrl}/users.json`,
-      requestBody,
-      httpOptions
-    );
+    return this.http
+      .post<User>(`${this.firebaseUrl}/users.json`, requestBody, httpOptions)
+      .pipe(tap((user) => this.user$$.next(user)));
   }
 
   // logout() {

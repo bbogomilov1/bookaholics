@@ -33,7 +33,7 @@ export class RegisterComponent {
     private http: HttpClient
   ) {}
 
-  register(): void {
+  async register() {
     if (this.form.invalid) {
       return;
     }
@@ -41,12 +41,29 @@ export class RegisterComponent {
     const { username, email, passGroup: { password } = {} } = this.form.value;
 
     if (!password) {
-      // Handle the case where password is empty
       return;
     }
 
-    this.userService.register(username!, email!, password).subscribe(() => {
-      this.router.navigate(['/']);
-    });
+    try {
+      const allUsersResponse = await this.userService.getAllUsers().toPromise();
+
+      const userEmailsSet = new Set<string>();
+      for (const userId in allUsersResponse) {
+        if (allUsersResponse[userId]?.email) {
+          userEmailsSet.add(allUsersResponse[userId].email);
+        }
+      }
+
+      if (email && userEmailsSet.has(email)) {
+        console.log('Email already exists');
+        return;
+      }
+
+      this.userService.register(username!, email!, password!).subscribe(() => {
+        this.router.navigate(['/']);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
