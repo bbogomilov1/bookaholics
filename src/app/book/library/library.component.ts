@@ -59,18 +59,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
     }
   }
 
-  // getLoggedInUserEmail(): string | null {
-  //   const cookies = document.cookie.split('; ');
-  //   for (const cookie of cookies) {
-  //     const [name, value] = cookie.split('=');
-  //     if (name === 'user') {
-  //       const user = JSON.parse(decodeURIComponent(value));
-  //       return user.email;
-  //     }
-  //   }
-  //   return null;
-  // }
-
   addToReadBooks(book: Book) {
     book.shelf = 'read';
 

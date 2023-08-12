@@ -73,7 +73,6 @@ export class RegisterComponent {
           .register(userId, username!, email!, password!)
           .subscribe(() => {
             const currentUser = { username, email };
-            console.log(currentUser);
 
             this.cookieService.set(
               'currentUser',
