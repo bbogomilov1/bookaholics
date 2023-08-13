@@ -54,33 +54,38 @@ export class BookService {
     const currentUserEmail = JSON.parse(
       this.userService.getLoggedInUserEmail()
     );
-    const url = `${this.firebaseUrl}/users.json`;
 
-    return this.http.get<User[]>(url).pipe(
-      switchMap((users) => {
-        const userId = Object.keys(users)[0];
-        const usersArray = Object.values(users);
+    return this.http
+      .get<{ [key: string]: User }>(`${this.firebaseUrl}/users.json`)
+      .pipe(
+        switchMap((users) => {
+          const userIds = Object.keys(users);
+          const usersArray = Object.values(users);
 
-        const currentUser = usersArray.find(
-          (user) => user.email === currentUserEmail.email
-        );
-
-        if (currentUser) {
-          // Update the currentUser's bookshelf with the new book
-          if (!currentUser.bookshelf) {
-            currentUser.bookshelf = [];
-          }
-          currentUser.bookshelf.push(book);
-
-          // Update the user's data in Firebase
-          return this.http.patch<User>(
-            `${this.firebaseUrl}/users/${userId}.json`,
-            currentUser
+          const currentUser = usersArray.find(
+            (user) => user.email === currentUserEmail.email
           );
-        }
-        return of(null);
-      })
-    );
+
+          if (currentUser) {
+            const userId = userIds.find(
+              (id) => users[id].email === currentUser.email
+            );
+
+            if (userId) {
+              if (!currentUser.bookshelf) {
+                currentUser.bookshelf = [];
+              }
+              currentUser.bookshelf.push(book);
+
+              return this.http.patch<User>(
+                `${this.firebaseUrl}/users/${userId}.json`,
+                currentUser
+              );
+            }
+          }
+          return of(null);
+        })
+      );
   }
 
   getAllBooksFromBookshelf(): Observable<{ [key: string]: Book }> {

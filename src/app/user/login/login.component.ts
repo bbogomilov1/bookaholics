@@ -47,7 +47,11 @@ export class LoginComponent implements OnInit {
         if (user && user.password === password) {
           this.cookieService.set(
             'currentUser',
-            JSON.stringify({ email: user.email, username: user.username })
+            JSON.stringify({
+              id: user.id,
+              email: user.email,
+              username: user.username,
+            })
           );
           this.authService.login();
           console.log('Logged in successfully');
