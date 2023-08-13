@@ -40,7 +40,7 @@
       </p>
 
       <!-- icons -->
-      <div class="icons-container">
+      <div *ngIf="isUserLoggedIn" class="icons-container">
         <button
           class="btn-icon"
           (click)="toggleReadStatus(book)"

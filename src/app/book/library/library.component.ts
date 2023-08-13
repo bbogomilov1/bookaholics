@@ -43,6 +43,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
     // this.fetchBooks();
   }
 
+  get isUserLoggedIn(): boolean {
+    return !!this.userService.getLoggedInUserEmail();
+  }
+
   toggleReadStatus(book: Book) {
     if (book.shelf === 'read') {
       this.removeFromReadBooks(book);
