@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
               username: user.username,
             })
           );
-          this.authService.login();
+          this.authService.login(user);
           console.log('Logged in successfully');
           this.router.navigate(['/']);
         } else {
