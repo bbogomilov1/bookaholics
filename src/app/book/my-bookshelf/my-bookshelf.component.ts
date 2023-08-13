@@ -3,6 +3,7 @@ import { Book } from 'src/app/types/book';
 import { BookService } from '../book.service';
 import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
   selector: 'app-my-bookshelf',
@@ -20,7 +21,10 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
 
   private fetchBooksFromBookshelfSubscription: Subscription | null = null;
 
-  constructor(private bookService: BookService) {}
+  constructor(
+    private bookService: BookService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.fetchBooksFromBookshelf();
@@ -75,32 +79,36 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
   }
 
   fetchBooksFromBookshelf() {
-    this.fetchBooksFromBookshelfSubscription = this.bookService
-      .getAllBooksFromBookshelf()
-      .subscribe(
-        (books) => {
-          this.wishlistBooks = Object.values(books).filter(
-            (book, index, books) =>
-              book.shelf === 'wishlist' &&
-              index === books.findIndex((b) => b.title === book.title)
+    this.fetchBooksFromBookshelfSubscription =
+      this.authService.currentUser$.subscribe((currentUser) => {
+        if (currentUser) {
+          this.bookService.getAllBooksFromBookshelf(currentUser.id).subscribe(
+            (books) => {
+              this.wishlistBooks = Object.values(books).filter(
+                (book) => book.shelf === 'wishlist'
+              );
+              this.readBooks = Object.values(books).filter(
+                (book) => book.shelf === 'read'
+              );
+              this.isLoading = false;
+            },
+            (error) => {
+              console.error('Error fetching books:', error);
+              this.isLoading = false;
+            },
+            () => {
+              if (
+                this.wishlistBooks.length === 0 ||
+                this.readBooks.length === 0
+              ) {
+                this.isLoading = false;
+              }
+            }
           );
-          this.readBooks = Object.values(books).filter(
-            (book, index, books) =>
-              book.shelf === 'read' &&
-              index === books.findIndex((b) => b.title === book.title)
-          );
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching books:', error);
-          this.isLoading = false;
-        },
-        () => {
-          if (this.wishlistBooks.length === 0 || this.readBooks.length === 0) {
-            this.isLoading = false;
-          }
+        } else {
+          // Handle case when user is not logged in
         }
-      );
+      });
   }
 
   ngOnDestroy(): void {

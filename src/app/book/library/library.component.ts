@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Book } from 'src/app/types/book';
 import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, of } from 'rxjs';
 import { LibraryService } from './library.service';
 import { BookService } from '../book.service';
 import { UserService } from 'src/app/user/user.service';
+import { AuthService } from 'src/app/shared/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { User } from 'src/app/types/user';
 
 @Component({
   selector: 'app-library',
@@ -35,7 +38,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
   constructor(
     private libraryService: LibraryService,
     private bookService: BookService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -172,90 +177,138 @@ export class LibraryComponent implements OnInit, OnDestroy {
   }
 
   fetchBooksFromBookshelf() {
-    this.fetchBooksFromBookshelfSubscription = this.bookService
-      .getAllBooksFromBookshelf()
-      .subscribe(
-        (books) => {
-          if (!books) {
-            books = {};
-          }
+    this.fetchBooksFromBookshelfSubscription =
+      this.authService.currentUser$.subscribe((currentUser) => {
+        if (currentUser) {
+          this.http
+            .get<{ [key: string]: User }>(
+              `https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json`
+            )
+            .pipe(
+              switchMap((users) => {
+                const userIds = Object.keys(users);
+                const usersArray = Object.values(users);
 
-          this.bookshelfBooks = Object.values(books);
+                const userId = userIds.find(
+                  (id) => users[id].email === currentUser.email
+                );
 
-          if (this.searchQuery === '' || this.searchQuery === 'classics') {
-            this.fetchBooks();
-          } else {
-            this.searchBooks();
-          }
+                if (userId) {
+                  return this.bookService.getAllBooksFromBookshelf(userId);
+                } else {
+                  return of(null);
+                }
+              })
+            )
+            .subscribe(
+              (books) => {
+                if (!books) {
+                  books = {};
+                }
 
-          this.books.forEach((book) => {
-            const currBook = this.bookshelfBooks.find(
-              (b) => b._version_ === book._version_
+                this.bookshelfBooks = Object.values(books);
+
+                if (
+                  this.searchQuery === '' ||
+                  this.searchQuery === 'classics'
+                ) {
+                  this.fetchBooks();
+                } else {
+                  this.searchBooks();
+                }
+
+                this.books.forEach((book) => {
+                  const currBook = this.bookshelfBooks.find(
+                    (b) => b._version_ === book._version_
+                  );
+
+                  if (currBook) {
+                    book.shelf = currBook.shelf;
+                  }
+                });
+                this.isLoading = false;
+              },
+              (error) => {
+                console.error('Error fetching books:', error);
+                this.isLoading = false;
+              }
             );
-
-            if (currBook) {
-              book.shelf = currBook.shelf;
-            }
-          });
-          // this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching books:', error);
-          this.isLoading = false;
+        } else {
+          // No current user, directly fetch books
+          this.fetchBooks();
         }
-      );
+      });
   }
 
   searchBooks() {
     this.isSearching = true;
     this.isLoading = true;
 
-    this.fetchBooksFromBookshelfSubscription = this.bookService
-      .getAllBooksFromBookshelf()
-      .subscribe((books) => {
-        if (!books) {
-          books = {};
-        }
+    this.fetchBooksFromBookshelfSubscription =
+      this.authService.currentUser$.subscribe((currentUser) => {
+        if (currentUser) {
+          this.bookService
+            .getAllBooksFromBookshelf(currentUser.id)
+            .subscribe((books) => {
+              if (!books) {
+                books = {};
+              }
 
-        this.bookshelfBooks = Object.values(books);
+              this.bookshelfBooks = Object.values(books);
 
-        this.searchSubscription = this.libraryService
-          .searchBooks(this.searchQuery, this.booksToShow)
-          .subscribe(
-            (response) => {
-              const fetchedBooks = response.docs.filter(
-                (book) =>
-                  book.title && book.author_name && book.author_name.length > 0
-              );
+              this.searchSubscription = this.libraryService
+                .searchBooks(this.searchQuery, this.booksToShow)
+                .subscribe(
+                  (response) => {
+                    const fetchedBooks = response.docs.filter(
+                      (book) =>
+                        book.title &&
+                        book.author_name &&
+                        book.author_name.length > 0
+                    );
 
-              const bookshelfTitles = new Set(
-                this.bookshelfBooks.map((book) => book.title)
-              );
+                    const bookshelfTitles = new Set(
+                      this.bookshelfBooks.map((book) => book.title)
+                    );
 
-              fetchedBooks.forEach((book) => {
-                if (bookshelfTitles.has(book.title)) {
-                  const currBook = this.bookshelfBooks.find(
-                    (b) => b.title === book.title
-                  );
-                  if (currBook) {
-                    book.shelf = currBook.shelf;
+                    fetchedBooks.forEach((book) => {
+                      if (bookshelfTitles.has(book.title)) {
+                        const currBook = this.bookshelfBooks.find(
+                          (b) => b.title === book.title
+                        );
+                        if (currBook) {
+                          book.shelf = currBook.shelf;
+                        }
+                      }
+                    });
+
+                    this.books = fetchedBooks;
+                    this.totalBooks = response.numFound;
+                    this.isLoading = false;
+                    this.buttonLessIsLoading = false;
+                    this.buttonMoreIsLoading = false;
+                  },
+                  (error) => {
+                    console.error('Error fetching books:', error);
+                    this.isLoading = false;
+                    this.buttonLessIsLoading = false;
+                    this.buttonMoreIsLoading = false;
                   }
-                }
-              });
-
-              this.books = fetchedBooks;
-              this.totalBooks = response.numFound;
-              this.isLoading = false;
-              this.buttonLessIsLoading = false;
-              this.buttonMoreIsLoading = false;
-            },
-            (error) => {
-              console.error('Error fetching books:', error);
-              this.isLoading = false;
-              this.buttonLessIsLoading = false;
-              this.buttonMoreIsLoading = false;
-            }
-          );
+                );
+            });
+        } else {
+          // No current user, directly fetch books
+          this.searchSubscription = this.libraryService
+            .searchBooks(this.searchQuery, this.booksToShow)
+            .subscribe(
+              (response) => {
+                // ...
+              },
+              (error) => {
+                // ...
+              }
+            );
+        }
       });
   }
 
