@@ -151,16 +151,19 @@ export class LibraryComponent implements OnInit, OnDestroy {
           const bookshelfTitles = new Set(
             this.bookshelfBooks.map((book) => book._version_)
           );
+
           fetchedBooks.forEach((book) => {
             if (bookshelfTitles.has(book._version_)) {
               const currBook = this.bookshelfBooks.find(
                 (b) => b._version_ === book._version_
               );
+
               if (currBook) {
                 book.shelf = currBook.shelf;
               }
             }
           });
+
           this.books = fetchedBooks;
           this.totalBooks = response.numFound;
           this.isLoading = false;
@@ -187,7 +190,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
             .pipe(
               switchMap((users) => {
                 const userIds = Object.keys(users);
-                const usersArray = Object.values(users);
+                // const usersArray = Object.values(users);
 
                 const userId = userIds.find(
                   (id) => users[id].email === currentUser.email

@@ -13,11 +13,6 @@ export class BookService {
 
   constructor(private http: HttpClient, private userService: UserService) {}
 
-  addBook(book: Book): Observable<any> {
-    const url = `${this.firebaseUrl}/books.json`;
-    return this.http.post(url, book);
-  }
-
   private getBookKey(version: string): Observable<string | null> {
     return this.http
       .get<{ [key: string]: Book }>(`${this.firebaseUrl}/bookshelf.json`)
@@ -43,11 +38,6 @@ export class BookService {
         }
       })
     );
-  }
-
-  getAllBooks(): Observable<{ [key: string]: Book }> {
-    const url = `${this.firebaseUrl}/books.json`;
-    return this.http.get<{ [key: string]: Book }>(this.firebaseUrl);
   }
 
   addToBookshelf(book: Book): Observable<any> {
