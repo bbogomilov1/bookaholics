@@ -2,8 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Book } from 'src/app/types/book';
 import { BookService } from '../book.service';
 import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, of } from 'rxjs';
 import { AuthService } from 'src/app/shared/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { User } from 'src/app/types/user';
 
 @Component({
   selector: 'app-my-bookshelf',
@@ -23,7 +25,8 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
 
   constructor(
     private bookService: BookService,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -82,29 +85,52 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
     this.fetchBooksFromBookshelfSubscription =
       this.authService.currentUser$.subscribe((currentUser) => {
         if (currentUser) {
-          this.bookService.getAllBooksFromBookshelf(currentUser.id).subscribe(
-            (books) => {
-              this.wishlistBooks = Object.values(books).filter(
-                (book) => book.shelf === 'wishlist'
-              );
-              this.readBooks = Object.values(books).filter(
-                (book) => book.shelf === 'read'
-              );
-              this.isLoading = false;
-            },
-            (error) => {
-              console.error('Error fetching books:', error);
-              this.isLoading = false;
-            },
-            () => {
-              if (
-                this.wishlistBooks.length === 0 ||
-                this.readBooks.length === 0
-              ) {
+          this.http
+            .get<{ [key: string]: User }>(
+              `https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json`
+            )
+            .pipe(
+              switchMap((users) => {
+                const userIds = Object.keys(users);
+
+                const userId = userIds.find(
+                  (id) => users[id].email === currentUser.email
+                );
+
+                if (userId) {
+                  return this.bookService.getAllBooksFromBookshelf(userId);
+                } else {
+                  return of(null);
+                }
+              })
+            )
+            .subscribe(
+              (books) => {
+                if (books) {
+                  this.wishlistBooks = Object.values(books).filter(
+                    (book) => book.shelf === 'wishlist'
+                  );
+                  this.readBooks = Object.values(books).filter(
+                    (book) => book.shelf === 'read'
+                  );
+                }
                 this.isLoading = false;
+              },
+              (error) => {
+                console.error('Error fetching books:', error);
+                this.isLoading = false;
+              },
+              () => {
+                if (
+                  (this.wishlistBooks.length === 0 &&
+                    this.readBooks.length === 0) ||
+                  this.wishlistBooks.length === 0 ||
+                  this.readBooks.length === 0
+                ) {
+                  this.isLoading = false;
+                }
               }
-            }
-          );
+            );
         } else {
           // Handle case when user is not logged in
         }

@@ -190,7 +190,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
             .pipe(
               switchMap((users) => {
                 const userIds = Object.keys(users);
-                // const usersArray = Object.values(users);
 
                 const userId = userIds.find(
                   (id) => users[id].email === currentUser.email
