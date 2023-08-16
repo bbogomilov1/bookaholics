@@ -1,7 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Book } from 'src/app/types/book';
 import { BookService } from '../book.service';
-import { faBookmark, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookmark,
+  faSquareCheck,
+  faPencilSquare,
+} from '@fortawesome/free-solid-svg-icons';
 import { Subscription, switchMap, of } from 'rxjs';
 import { AuthService } from 'src/app/shared/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -15,6 +19,7 @@ import { User } from 'src/app/types/user';
 export class MyBookshelfComponent implements OnInit, OnDestroy {
   faBookmark = faBookmark;
   faSquareCheck = faSquareCheck;
+  faPencil = faPencilSquare;
 
   books: Book[] = [];
   wishlistBooks: Book[] = [];

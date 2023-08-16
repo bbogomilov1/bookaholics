@@ -55,6 +55,12 @@
           >
             <fa-icon [icon]="faBookmark" />
           </button>
+
+          <ng-container *ngIf="book.customCoverUrl">
+            <a routerLink="/edit-book" class="btn-icon">
+              <fa-icon [icon]="faPencil"></fa-icon>
+            </a>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -110,6 +116,12 @@
           <button class="btn-icon">
             <fa-icon [icon]="faBookmark" />
           </button>
+
+          <ng-container *ngIf="book.customCoverUrl">
+            <a routerLink="/edit-book" class="btn-icon">
+              <fa-icon [icon]="faPencil"></fa-icon>
+            </a>
+          </ng-container>
         </div>
       </div>
     </div>
