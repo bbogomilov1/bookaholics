@@ -75,7 +75,7 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'read'
+        // If there's an error, set the shelf back to 'wishlist'
         book.shelf = 'wishlist';
       }
     );
@@ -107,12 +107,12 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
             .subscribe(
               (books) => {
                 if (books) {
-                  this.wishlistBooks = Object.values(books).filter(
-                    (book) => book.shelf === 'wishlist'
-                  );
-                  this.readBooks = Object.values(books).filter(
-                    (book) => book.shelf === 'read'
-                  );
+                  this.wishlistBooks = Object.values(books)
+                    .filter((book) => book.shelf === 'wishlist')
+                    .reverse();
+                  this.readBooks = Object.values(books)
+                    .filter((book) => book.shelf === 'read')
+                    .reverse();
                 }
                 this.isLoading = false;
               },
@@ -132,6 +132,8 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
               }
             );
         } else {
+          this.isLoading = false;
+
           // Handle case when user is not logged in
         }
       });
