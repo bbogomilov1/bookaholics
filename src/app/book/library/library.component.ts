@@ -249,8 +249,25 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.fetchBooksFromBookshelfSubscription =
       this.authService.currentUser$.subscribe((currentUser) => {
         if (currentUser) {
-          this.bookService
-            .getAllBooksFromBookshelf(currentUser.id)
+          this.http
+            .get<{ [key: string]: User }>(
+              `https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json`
+            )
+            .pipe(
+              switchMap((users) => {
+                const userIds = Object.keys(users);
+
+                const userId = userIds.find(
+                  (id) => users[id].email === currentUser.email
+                );
+
+                if (userId) {
+                  return this.bookService.getAllBooksFromBookshelf(userId);
+                } else {
+                  return of(null);
+                }
+              })
+            )
             .subscribe((books) => {
               if (!books) {
                 books = {};
