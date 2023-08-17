@@ -57,7 +57,7 @@
           </button>
 
           <ng-container *ngIf="book.customCoverUrl">
-            <a routerLink="/edit-book" class="btn-icon">
+            <a [routerLink]="['/edit', book._version_]" class="btn-icon">
               <fa-icon [icon]="faPencil"></fa-icon>
             </a>
           </ng-container>
@@ -118,7 +118,7 @@
           </button>
 
           <ng-container *ngIf="book.customCoverUrl">
-            <a routerLink="/edit-book" class="btn-icon">
+            <a [routerLink]="['/edit', book._version_]" class="btn-icon">
               <fa-icon [icon]="faPencil"></fa-icon>
             </a>
           </ng-container>

@@ -53,6 +53,85 @@ export class BookService {
       );
   }
 
+  getBookByVersion(version: string): Observable<Book | null> {
+    const currentUserEmail = JSON.parse(
+      this.userService.getLoggedInUserEmail()
+    );
+
+    return this.http
+      .get<{ [key: string]: User }>(`${this.firebaseUrl}/users.json`)
+      .pipe(
+        switchMap((users) => {
+          const userIds = Object.keys(users);
+          const usersArray = Object.values(users);
+
+          const currentUser = usersArray.find(
+            (user) => user.email === currentUserEmail.email
+          );
+
+          if (currentUser) {
+            const userId = userIds.find(
+              (id) => users[id].email === currentUser.email
+            );
+
+            if (userId && currentUser.bookshelf) {
+              const book = currentUser.bookshelf.find(
+                (b) => b._version_ === version
+              );
+
+              if (book) {
+                return of(book);
+              }
+            }
+          }
+          return of(null);
+        })
+      );
+  }
+
+  updateInBookshelf(updatedBook: Book): Observable<any> {
+    const currentUserEmail = JSON.parse(
+      this.userService.getLoggedInUserEmail()
+    );
+
+    return this.http
+      .get<{ [key: string]: User }>(`${this.firebaseUrl}/users.json`)
+      .pipe(
+        switchMap((users) => {
+          const userIds = Object.keys(users);
+          const usersArray = Object.values(users);
+
+          const currentUser = usersArray.find(
+            (user) => user.email === currentUserEmail.email
+          );
+
+          if (currentUser) {
+            const userId = userIds.find(
+              (id) => users[id].email === currentUser.email
+            );
+
+            if (userId) {
+              if (!currentUser.bookshelf) {
+                currentUser.bookshelf = [];
+              }
+              const bookIndex = currentUser.bookshelf.findIndex(
+                (b) => b._version_ === updatedBook._version_
+              );
+
+              if (bookIndex !== -1) {
+                currentUser.bookshelf[bookIndex] = updatedBook; // Update the book here
+                return this.http.patch<User>(
+                  `${this.firebaseUrl}/users/${userId}.json`,
+                  currentUser
+                );
+              }
+            }
+          }
+          return of(null);
+        })
+      );
+  }
+
   addToBookshelf(book: Book): Observable<any> {
     const currentUserEmail = JSON.parse(
       this.userService.getLoggedInUserEmail()

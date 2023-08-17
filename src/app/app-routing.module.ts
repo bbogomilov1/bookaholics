@@ -31,7 +31,7 @@ const routes: Routes = [
     component: AddBookComponent,
   },
   {
-    path: 'edit-book',
+    path: 'edit/:version',
     component: EditBookComponent,
   },
   {

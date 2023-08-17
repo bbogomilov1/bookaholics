@@ -1,1 +1,42 @@
-<p>edit-book works!</p>
+<div class="edit-book-container">
+  <h2>Edit Book</h2>
+  <form [formGroup]="editBookForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" formControlName="title" required />
+    </div>
+    <div class="form-group">
+      <label for="cover">Cover URL</label>
+      <input type="text" id="cover" formControlName="cover" required />
+    </div>
+    <div class="form-group">
+      <label for="author">Author(s)</label>
+      <input type="text" id="author" formControlName="author" required />
+    </div>
+    <div class="form-group">
+      <label for="publishedYear">Published Year</label>
+      <select id="publishedYear" formControlName="publishedYear" required>
+        <option value="" disabled>Select year</option>
+        <option *ngFor="let year of yearsRange" [value]="year">
+          {{ year }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="genre">Genre(s)</label>
+      <input type="text" id="genre" formControlName="genre" required />
+    </div>
+    <div class="form-group">
+      <label for="shelf">Have you read it or is it in your wishlist?</label>
+      <select id="shelf" formControlName="shelf" required>
+        <option value="read">I have read it</option>
+        <option value="wishlist">It's on my wishlist</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit">Update Book</button>
+    </div>
+  </form>
+</div>
