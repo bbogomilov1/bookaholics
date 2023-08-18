@@ -45,7 +45,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.fetchBooksFromBookshelf();
-    // this.fetchBooks();
   }
 
   get isUserLoggedIn(): boolean {

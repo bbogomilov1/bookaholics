@@ -68,20 +68,6 @@ export class UserService implements OnInit, OnDestroy {
     return this.cookieService.get('currentUser');
   }
 
-  // updateUser(user: User): Observable<User> {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //     }),
-  //   };
-
-  //   return this.http.put<User>(
-  //     `${this.firebaseUrl}/users/${user.id}.json`,
-  //     user,
-  //     httpOptions
-  //   );
-  // }
-
   register(userId: string, username: string, email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -105,18 +91,6 @@ export class UserService implements OnInit, OnDestroy {
     this.cookieService.delete('currentUser');
     this.user$$.next(undefined);
   }
-
-  // getProfile() {
-  //   return this.http
-  //     .get<User>('/api/users/profile')
-  //     .pipe(tap((user) => this.user$$.next(user)));
-  // }
-
-  // updateProfile(username: string, email: string, tel?: string) {
-  //   return this.http
-  //     .put<User>('/api/users/profile', { username, email, tel })
-  //     .pipe(tap((user) => this.user$$.next(user)));
-  // }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

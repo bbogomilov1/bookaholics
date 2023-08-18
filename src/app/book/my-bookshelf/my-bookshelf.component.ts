@@ -27,6 +27,7 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
 
   private fetchBooksFromBookshelfSubscription: Subscription | null = null;
+  private firebaseUrl = 'https://bookaholics-966d8-default-rtdb.firebaseio.com';
 
   constructor(
     private bookService: BookService,
@@ -38,62 +39,12 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
     this.fetchBooksFromBookshelf();
   }
 
-  removeFromReadBooks(book: Book) {
-    if (book.shelf !== 'read') {
-      return;
-    }
-
-    this.bookService.removeFromBookshelf(book).subscribe(
-      (response) => {
-        console.log('Removed from My Books:', book.title);
-
-        const bookIndex = this.readBooks.findIndex(
-          (b) => b._version_ === book._version_
-        );
-        if (bookIndex !== -1) {
-          this.readBooks.splice(bookIndex, 1);
-        }
-      },
-      (error) => {
-        console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'read'
-        book.shelf = 'read';
-      }
-    );
-  }
-
-  removeFromWishlistBooks(book: Book) {
-    if (book.shelf !== 'wishlist') {
-      return;
-    }
-
-    this.bookService.removeFromBookshelf(book).subscribe(
-      (response) => {
-        console.log('Removed from My Books:', book.title);
-
-        const bookIndex = this.wishlistBooks.findIndex(
-          (b) => b._version_ === book._version_
-        );
-        if (bookIndex !== -1) {
-          this.wishlistBooks.splice(bookIndex, 1);
-        }
-      },
-      (error) => {
-        console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'wishlist'
-        book.shelf = 'wishlist';
-      }
-    );
-  }
-
   fetchBooksFromBookshelf() {
     this.fetchBooksFromBookshelfSubscription =
       this.authService.currentUser$.subscribe((currentUser) => {
         if (currentUser) {
           this.http
-            .get<{ [key: string]: User }>(
-              `https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json`
-            )
+            .get<{ [key: string]: User }>(`${this.firebaseUrl}/users.json`)
             .pipe(
               switchMap((users) => {
                 const userIds = Object.keys(users);
@@ -142,6 +93,54 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
           // Handle case when user is not logged in
         }
       });
+  }
+
+  removeFromReadBooks(book: Book) {
+    if (book.shelf !== 'read') {
+      return;
+    }
+
+    this.bookService.removeFromBookshelf(book).subscribe(
+      (response) => {
+        console.log('Removed from My Books:', book.title);
+
+        const bookIndex = this.readBooks.findIndex(
+          (b) => b._version_ === book._version_
+        );
+        if (bookIndex !== -1) {
+          this.readBooks.splice(bookIndex, 1);
+        }
+      },
+      (error) => {
+        console.error('Error removing book:', error);
+        // If there's an error, set the shelf back to 'read'
+        book.shelf = 'read';
+      }
+    );
+  }
+
+  removeFromWishlistBooks(book: Book) {
+    if (book.shelf !== 'wishlist') {
+      return;
+    }
+
+    this.bookService.removeFromBookshelf(book).subscribe(
+      (response) => {
+        console.log('Removed from My Books:', book.title);
+
+        const bookIndex = this.wishlistBooks.findIndex(
+          (b) => b._version_ === book._version_
+        );
+        if (bookIndex !== -1) {
+          this.wishlistBooks.splice(bookIndex, 1);
+        }
+      },
+      (error) => {
+        console.error('Error removing book:', error);
+        // If there's an error, set the shelf back to 'wishlist'
+        book.shelf = 'wishlist';
+      }
+    );
   }
 
   ngOnDestroy(): void {

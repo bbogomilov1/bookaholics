@@ -76,9 +76,11 @@
     <div class="book-container">
       <div *ngFor="let book of readBooks" class="book-item">
         <img
-          *ngIf="book.cover_i; else defaultCover"
+          *ngIf="book.customCoverUrl || book.cover_i"
           [src]="
-            'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'
+            book.customCoverUrl
+              ? book.customCoverUrl
+              : 'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg'
           "
           alt="Book Cover"
         />

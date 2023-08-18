@@ -27,18 +27,16 @@ export class AppComponent implements OnInit {
       this.currentUser = user;
     });
 
-    // Check if the currentUser cookie exists
     const currentUserCookie = this.cookieService.get('currentUser');
 
     if (currentUserCookie) {
       const currentUser = JSON.parse(currentUserCookie);
-      this.authService.login(currentUser); // User is logged in with currentUser
+      this.authService.login(currentUser);
     }
   }
 
   logout(): void {
-    // Clear currentUser cookie or perform other necessary actions
     this.userService.logout();
-    this.authService.logout(); // User is logged out
+    this.authService.logout();
   }
 }

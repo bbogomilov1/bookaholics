@@ -7,6 +7,7 @@ import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LibraryComponent } from './book/library/library.component';
 import { MyBookshelfComponent } from './book/my-bookshelf/my-bookshelf.component';
+import { AuthGuard } from './shared/auth.guard';
 
 const routes: Routes = [
   {
@@ -25,14 +26,17 @@ const routes: Routes = [
   {
     path: 'my-bookshelf',
     component: MyBookshelfComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'add-book',
     component: AddBookComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'edit/:version',
     component: EditBookComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'user/login',
