@@ -46,6 +46,7 @@ const routes: Routes = [
     path: 'user/register',
     component: RegisterComponent,
   },
+  { path: '**', redirectTo: '/home' },
 ];
 
 @NgModule({
