@@ -12,6 +12,8 @@
   <app-loader></app-loader>
 </div>
 
+<app-error-message [errorMessage]="errorMessage"></app-error-message>
+
 <ng-template #bookGrid>
   <div class="book-container">
     <div *ngFor="let book of books" class="book-item">

@@ -30,6 +30,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
   buttonMoreIsLoading: boolean = false;
   isSearching: boolean = false;
   currentSearchQuery: string = '';
+  errorMessage: string = '';
 
   private fetchBooksSubscription: Subscription | null = null;
   private searchSubscription: Subscription | null = null;
@@ -77,8 +78,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {},
         (error) => {
-          console.error('Error adding books:', error);
           this.isLoading = false;
+          this.errorMessage =
+            'An error occurred while adding the book to read bookshelf. Please try again later.';
+          throw new Error('Error adding book:', error.message);
         }
       );
   }
@@ -93,8 +96,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
         book.shelf = '';
       },
       (error) => {
-        console.error('Error removing book:', error);
         book.shelf = 'read';
+        this.errorMessage =
+          'An error occurred while removing the book from read bookshelf. Please try again later.';
+        throw new Error('Error removing book:', error.message);
       }
     );
   }
@@ -107,8 +112,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {},
         (error) => {
-          console.error('Error adding books:', error);
           this.isLoading = false;
+          this.errorMessage =
+            'An error occurred while adding the book to wishlist bookshelf. Please try again later.';
+          throw new Error('Error adding book:', error.message);
         }
       );
   }
@@ -123,8 +130,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
         book.shelf = '';
       },
       (error) => {
-        console.error('Error removing book:', error);
         book.shelf = 'read';
+        this.errorMessage =
+          'An error occurred while removing the book from wishlist bookshelf. Please try again later.';
+        throw new Error('Error removing book:', error.message);
       }
     );
   }
@@ -163,10 +172,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
           this.buttonMoreIsLoading = false;
         },
         (error) => {
-          console.error('Error fetching books:', error);
           this.isLoading = false;
           this.buttonLessIsLoading = false;
           this.buttonMoreIsLoading = false;
+          this.errorMessage =
+            'An error occurred while loading the books. Please try again later.';
+          throw new Error('Error fetching books:', error.message);
         }
       );
   }
@@ -300,10 +311,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
                     this.buttonMoreIsLoading = false;
                   },
                   (error) => {
-                    console.error('Error fetching books:', error);
                     this.isLoading = false;
                     this.buttonLessIsLoading = false;
                     this.buttonMoreIsLoading = false;
+                    this.errorMessage =
+                      'An error occurred while loading the books. Please try again later.';
+                    throw new Error('Error fetching books:', error.message);
                   }
                 );
             });
@@ -341,10 +354,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
                 this.buttonMoreIsLoading = false;
               },
               (error) => {
-                console.error('Error fetching books:', error);
                 this.isLoading = false;
                 this.buttonLessIsLoading = false;
                 this.buttonMoreIsLoading = false;
+                this.errorMessage =
+                  'An error occurred while loading the books. Please try again later.';
+                throw new Error('Error fetching books:', error.message);
               }
             );
         }
