@@ -96,9 +96,7 @@
       </p>
     </div>
 
-    <div *ngIf="errorMessage" class="error-message general-msg">
-      {{ errorMessage }}
-    </div>
+    <app-error-message [errorMessage]="errorMessage"></app-error-message>
 
     <div class="form-actions">
       <button type="submit" [disabled]="form.invalid">Register</button>

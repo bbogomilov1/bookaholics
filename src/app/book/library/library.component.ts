@@ -75,9 +75,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.addToReadSubscription = this.bookService
       .addToBookshelf(book)
       .subscribe(
-        (response) => {
-          console.log('Added to My Books:', book.title);
-        },
+        (response) => {},
         (error) => {
           console.error('Error adding books:', error);
           this.isLoading = false;
@@ -92,12 +90,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
     this.bookService.removeFromBookshelf(book).subscribe(
       (response) => {
-        console.log('Removed from My Books:', book.title);
         book.shelf = '';
       },
       (error) => {
         console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'read'
         book.shelf = 'read';
       }
     );
@@ -109,9 +105,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.addToWishlistSubscription = this.bookService
       .addToBookshelf(book)
       .subscribe(
-        (response) => {
-          console.log('Added to Wishlist:', book.title);
-        },
+        (response) => {},
         (error) => {
           console.error('Error adding books:', error);
           this.isLoading = false;
@@ -126,12 +120,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
     this.bookService.removeFromBookshelf(book).subscribe(
       (response) => {
-        console.log('Removed from My Books:', book.title);
         book.shelf = '';
       },
       (error) => {
         console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'read'
         book.shelf = 'read';
       }
     );
