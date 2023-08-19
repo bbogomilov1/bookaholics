@@ -24,7 +24,11 @@
         </h3>
         <p>Browse our extensive library and discover new books to read.</p>
       </div>
-      <div class="feature" routerLink="/my-bookshelf">
+      <div
+        class="feature"
+        [routerLink]="['/my-bookshelf']"
+        routerLinkActive="active"
+      >
         <h3>
           <fa-icon [icon]="faHeart" style="color: rgb(253, 70, 70)" /> My
           Bookshelf
@@ -33,7 +37,11 @@
           Keep track of the books you've read and revisit your literary journey.
         </p>
       </div>
-      <div class="feature" routerLink="/add-book">
+      <div
+        class="feature"
+        [routerLink]="['/add-book']"
+        routerLinkActive="active"
+      >
         <h3>
           <fa-icon [icon]="faPen" style="color: rgb(55, 180, 116)" /> Add Book
         </h3>
