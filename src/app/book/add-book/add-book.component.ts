@@ -14,6 +14,7 @@ import { v4 as uuid } from 'uuid';
 export class AddBookComponent implements OnInit, OnDestroy {
   bookForm!: FormGroup;
   uuid: string = uuid();
+  errorMessage: string = '';
   yearsRange: number[] = this.generateYearsRange(
     1800,
     new Date().getFullYear()
@@ -44,7 +45,6 @@ export class AddBookComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.bookForm.invalid) {
-      // Handle form validation errors
       return;
     }
 
@@ -60,15 +60,13 @@ export class AddBookComponent implements OnInit, OnDestroy {
 
     this.bookService.addToBookshelf(newBook).subscribe(
       (response) => {
-        // Success! Handle any success actions here
-        console.log('Book added successfully:', response);
-
         this.bookForm.reset();
         this.router.navigate(['/my-bookshelf']);
       },
       (error) => {
-        // Handle error, if any
-        console.error('Error adding book:', error);
+        this.errorMessage =
+          'An error occurred while adding a book. Please try again later.';
+        throw new Error('Error adding book:', error.message);
       }
     );
   }
