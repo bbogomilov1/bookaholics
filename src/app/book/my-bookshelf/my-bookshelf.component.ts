@@ -21,6 +21,8 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
   faSquareCheck = faSquareCheck;
   faPencil = faPencilSquare;
 
+  errorMessage: string = '';
+
   books: Book[] = [];
   wishlistBooks: Book[] = [];
   readBooks: Book[] = [];
@@ -73,8 +75,10 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
               },
               (error) => {
-                console.error('Error fetching books:', error);
                 this.isLoading = false;
+                this.errorMessage =
+                  'An error occurred while loading the books. Please try again later.';
+                throw new Error('Error fetching books:', error.message);
               },
               () => {
                 if (
@@ -89,8 +93,6 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
             );
         } else {
           this.isLoading = false;
-
-          // Handle case when user is not logged in
         }
       });
   }
@@ -102,8 +104,6 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
 
     this.bookService.removeFromBookshelf(book).subscribe(
       (response) => {
-        console.log('Removed from My Books:', book.title);
-
         const bookIndex = this.readBooks.findIndex(
           (b) => b._version_ === book._version_
         );
@@ -112,9 +112,10 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'read'
         book.shelf = 'read';
+        this.errorMessage =
+          'An error occurred while removing the book from read bookshelf. Please try again later.';
+        throw new Error('Error removing book:', error.message);
       }
     );
   }
@@ -126,8 +127,6 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
 
     this.bookService.removeFromBookshelf(book).subscribe(
       (response) => {
-        console.log('Removed from My Books:', book.title);
-
         const bookIndex = this.wishlistBooks.findIndex(
           (b) => b._version_ === book._version_
         );
@@ -136,9 +135,10 @@ export class MyBookshelfComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        console.error('Error removing book:', error);
-        // If there's an error, set the shelf back to 'wishlist'
         book.shelf = 'wishlist';
+        this.errorMessage =
+          'An error occurred while removing the book from wishlist bookshelf. Please try again later.';
+        throw new Error('Error removing book:', error.message);
       }
     );
   }
