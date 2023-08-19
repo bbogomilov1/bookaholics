@@ -11,6 +11,6 @@ export function matchPasswordsValidator(
 
     return passCtrl1?.value === passCtrl2?.value
       ? null
-      : { matchPasswordsValidator: true };
+      : { passwordsNotMatch: true };
   };
 }

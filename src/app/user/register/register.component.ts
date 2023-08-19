@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { appEmailValidator } from 'src/app/shared/validators/app-email-validator';
-// import { matchPasswordsValidator } from 'src/app/shared/validators/match-passwords-validator';
+import { matchPasswordsValidator } from 'src/app/shared/validators/match-passwords-validator';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from 'src/app/types/user';
-import { CookieService } from 'ngx-cookie-service';
 import { v4 as uuid } from 'uuid';
 
 @Component({
@@ -16,7 +14,7 @@ import { v4 as uuid } from 'uuid';
 })
 export class RegisterComponent {
   form = this.fb.group({
-    username: ['', [Validators.required]],
+    username: ['', [Validators.required, Validators.minLength(5)]],
     email: ['', [Validators.required, appEmailValidator()]],
     passGroup: this.fb.group(
       {
@@ -24,18 +22,19 @@ export class RegisterComponent {
         rePassword: ['', [Validators.required]],
       },
       {
-        // validators: [matchPasswordsValidator('password', 'rePassword')],
+        validators: [matchPasswordsValidator('password', 'rePassword')],
       }
     ),
   });
+
   allUsersResponse = {};
+  errorMessageEmail: string = '';
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router,
-    private http: HttpClient,
-    private cookieService: CookieService
+    private router: Router
   ) {}
 
   register() {
@@ -65,27 +64,20 @@ export class RegisterComponent {
         }
 
         if (email && userEmailsSet.has(email)) {
-          console.log('Email already exists');
+          this.errorMessageEmail = 'Email already exists';
           return;
         }
 
         this.userService
           .register(userId, username!, email!, password!)
           .subscribe(() => {
-            const currentUser = { id: userId, username, email };
-
-            this.cookieService.set(
-              'currentUser',
-              JSON.stringify(currentUser),
-              1
-            );
-
-            this.router.navigate(['/']);
+            this.router.navigate(['/user/login']);
           });
       },
       (error) => {
-        console.error('Error fetching users:', error);
-        // Handle error if needed
+        this.errorMessage =
+          'An error occurred while registering. Please try again later.';
+        throw new Error('Error fetching users:', error.message);
       }
     );
   }

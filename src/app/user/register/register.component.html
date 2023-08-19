@@ -4,10 +4,42 @@
     <div class="form-group">
       <label for="username">Username</label>
       <input type="text" id="username" formControlName="username" required />
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('username')?.touched &&
+          form.get('username')?.hasError('required')
+        "
+      >
+        Username is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="form.get('username')?.hasError('minlength')"
+      >
+        Username must be at least 5 characters long.
+      </p>
     </div>
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" id="email" formControlName="email" required />
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('email')?.touched && form.get('email')?.hasError('required')
+        "
+      >
+        Email is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="form.get('email')?.hasError('invalidEmail')"
+      >
+        Invalid email format.
+      </p>
+      <p *ngIf="errorMessageEmail" class="error-message">
+        {{ errorMessageEmail }}
+      </p>
     </div>
     <div class="form-group" formGroupName="passGroup">
       <label for="password">Password</label>
@@ -17,6 +49,21 @@
         formControlName="password"
         required
       />
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('passGroup.password')?.touched &&
+          form.get('passGroup.password')?.hasError('required')
+        "
+      >
+        Password is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="form.get('passGroup.password')?.hasError('minlength')"
+      >
+        Password must be at least 5 characters long.
+      </p>
     </div>
 
     <div class="form-group" formGroupName="passGroup">
@@ -27,9 +74,30 @@
         formControlName="rePassword"
         required
       />
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('passGroup.rePassword')?.touched &&
+          form.get('passGroup.rePassword')?.hasError('required')
+        "
+      >
+        Repeat password is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('passGroup.rePassword')?.touched &&
+          form.get('passGroup')?.hasError('passwordsNotMatch')
+        "
+      >
+        Passwords do not match.
+      </p>
+    </div>
+    <div *ngIf="errorMessage" class="error-message general-msg">
+      {{ errorMessage }}
     </div>
     <div class="form-actions">
-      <button type="submit">Register</button>
+      <button type="submit" [disabled]="form.invalid">Register</button>
       <p>
         Alread have an account? Log in now from
         <a routerLink="/user/login">here</a>
