@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BookService } from '../book.service';
 import { Book } from 'src/app/types/book';
-import { AuthService } from 'src/app/shared/auth.service';
+import { coverUrlValidator } from 'src/app/shared/validators/cover-url-validator';
 
 @Component({
   selector: 'app-edit-book',
@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/shared/auth.service';
 export class EditBookComponent implements OnInit {
   editBookForm: FormGroup;
   version: string | null = null;
+  errorMessage: string = '';
   yearsRange: number[] = this.generateYearsRange(
     1800,
     new Date().getFullYear()
@@ -26,7 +27,7 @@ export class EditBookComponent implements OnInit {
   ) {
     this.editBookForm = this.fb.group({
       title: ['', Validators.required],
-      cover: ['', Validators.required],
+      cover: ['', coverUrlValidator()],
       author: ['', Validators.required],
       publishedYear: ['', Validators.required],
       genre: ['', Validators.required],
@@ -51,12 +52,13 @@ export class EditBookComponent implements OnInit {
                 shelf: book.shelf,
               });
             } else {
-              console.error('Book not found');
-              // Handle case where book is not found
+              this.errorMessage = 'Book was not found. Please try again';
             }
           },
           (error) => {
-            console.error('Error fetching book:', error);
+            this.errorMessage =
+              'An error occurred while editing the book. Please try again later.';
+            throw new Error('Error adding book:', error.message);
           }
         );
       }
@@ -77,12 +79,12 @@ export class EditBookComponent implements OnInit {
 
       this.bookService.updateInBookshelf(updatedBook).subscribe(
         (response) => {
-          console.log('Book updated successfully:', updatedBook.title);
           this.router.navigate(['/my-bookshelf']);
         },
         (error) => {
-          console.error('Error updating book:', error);
-          // Handle error
+          this.errorMessage =
+            'An error occurred while editing the book. Please try again later.';
+          throw new Error('Error adding book:', error.message);
         }
       );
     }

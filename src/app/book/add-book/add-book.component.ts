@@ -5,6 +5,7 @@ import { Book } from 'src/app/types/book';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
+import { coverUrlValidator } from 'src/app/shared/validators/cover-url-validator';
 
 @Component({
   selector: 'app-add-book',
@@ -35,7 +36,7 @@ export class AddBookComponent implements OnInit, OnDestroy {
   initForm() {
     this.bookForm = this.formBuilder.group({
       title: ['', Validators.required],
-      cover: ['', Validators.required],
+      cover: ['', coverUrlValidator()],
       author: ['', Validators.required],
       publishedYear: ['', Validators.required],
       genre: ['', Validators.required],
@@ -65,7 +66,7 @@ export class AddBookComponent implements OnInit, OnDestroy {
       },
       (error) => {
         this.errorMessage =
-          'An error occurred while adding a book. Please try again later.';
+          'An error occurred while adding the book. Please try again later.';
         throw new Error('Error adding book:', error.message);
       }
     );

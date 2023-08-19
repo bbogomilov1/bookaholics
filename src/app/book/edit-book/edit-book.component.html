@@ -4,15 +4,51 @@
     <div class="form-group">
       <label for="title">Title</label>
       <input type="text" id="title" formControlName="title" required />
+      <p
+        class="error-message"
+        *ngIf="
+          editBookForm.get('title')?.touched &&
+          editBookForm.get('title')?.hasError('required')
+        "
+      >
+        Title is required.
+      </p>
     </div>
+
     <div class="form-group">
       <label for="cover">Cover URL</label>
       <input type="text" id="cover" formControlName="cover" required />
+      <p
+        class="error-message"
+        *ngIf="
+          editBookForm.get('cover')?.touched &&
+          editBookForm.get('cover')?.hasError('required')
+        "
+      >
+        Link for the cover is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="editBookForm.get('cover')?.hasError('invalidCoverUrl')"
+      >
+        Invalid link format. Please start with "https://" or "http://".
+      </p>
     </div>
+
     <div class="form-group">
       <label for="author">Author(s)</label>
       <input type="text" id="author" formControlName="author" required />
+      <p
+        class="error-message"
+        *ngIf="
+          editBookForm.get('author')?.touched &&
+          editBookForm.get('author')?.hasError('required')
+        "
+      >
+        Author name is required.
+      </p>
     </div>
+
     <div class="form-group">
       <label for="publishedYear">Published Year</label>
       <select id="publishedYear" formControlName="publishedYear" required>
@@ -21,22 +57,54 @@
           {{ year }}
         </option>
       </select>
+      <p
+        class="error-message"
+        *ngIf="
+          editBookForm.get('publishedYear')?.touched &&
+          editBookForm.get('publishedYear')?.hasError('required')
+        "
+      >
+        Published year is required.
+      </p>
     </div>
 
     <div class="form-group">
       <label for="genre">Genre(s)</label>
       <input type="text" id="genre" formControlName="genre" required />
+      <p
+        class="error-message"
+        *ngIf="
+          editBookForm.get('genre')?.touched &&
+          editBookForm.get('genre')?.hasError('required')
+        "
+      >
+        Genre is required.
+      </p>
     </div>
+
     <div class="form-group">
       <label for="shelf">Have you read it or is it in your wishlist?</label>
       <select id="shelf" formControlName="shelf" required>
         <option value="read">I have read it</option>
         <option value="wishlist">It's on my wishlist</option>
       </select>
+      <p
+        class="error-message"
+        *ngIf="
+          editBookForm.get('shelf')?.touched &&
+          editBookForm.get('shelf')?.hasError('required')
+        "
+      >
+        An option is required.
+      </p>
     </div>
 
+    <app-error-message [errorMessage]="errorMessage"></app-error-message>
+
     <div class="form-actions">
-      <button type="submit">Update Book</button>
+      <button type="submit" [disabled]="editBookForm.invalid">
+        Update Book
+      </button>
     </div>
   </form>
 </div>

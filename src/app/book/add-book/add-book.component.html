@@ -25,7 +25,13 @@
           bookForm.get('cover')?.hasError('required')
         "
       >
-        Link of the cover is required.
+        Link for the cover is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="bookForm.get('cover')?.hasError('invalidCoverUrl')"
+      >
+        Invalid link format. Please start with "https://" or "http://".
       </p>
     </div>
 
