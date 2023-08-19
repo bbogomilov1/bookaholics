@@ -18,6 +18,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   faBookmark = faBookmark;
   faSquareCheck = faSquareCheck;
 
+  private firebaseUrl = 'https://bookaholics-966d8-default-rtdb.firebaseio.com';
+
   private booksToShow: number = 9;
   searchQuery: string = '';
   books: Book[] = [];
@@ -74,7 +76,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .addToBookshelf(book)
       .subscribe(
         (response) => {
-          // this.fetchBooksFromBookshelf.find()
           console.log('Added to My Books:', book.title);
         },
         (error) => {
@@ -183,9 +184,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
       this.authService.currentUser$.subscribe((currentUser) => {
         if (currentUser) {
           this.http
-            .get<{ [key: string]: User }>(
-              `https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json`
-            )
+            .get<{ [key: string]: User }>(`${this.firebaseUrl}/users.json`)
             .pipe(
               switchMap((users) => {
                 const userIds = Object.keys(users);
@@ -235,8 +234,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
               }
             );
         } else {
-          // No current user, directly fetch books
-          this.fetchBooks();
+          if (this.searchQuery === '' || this.searchQuery === 'classics') {
+            this.fetchBooks();
+          } else {
+            this.searchBooks();
+          }
+          this.isLoading = false;
         }
       });
   }
@@ -249,9 +252,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
       this.authService.currentUser$.subscribe((currentUser) => {
         if (currentUser) {
           this.http
-            .get<{ [key: string]: User }>(
-              `https://bookaholics-966d8-default-rtdb.firebaseio.com/users.json`
-            )
+            .get<{ [key: string]: User }>(`${this.firebaseUrl}/users.json`)
             .pipe(
               switchMap((users) => {
                 const userIds = Object.keys(users);
@@ -315,15 +316,43 @@ export class LibraryComponent implements OnInit, OnDestroy {
                 );
             });
         } else {
-          // No current user, directly fetch books
           this.searchSubscription = this.libraryService
             .searchBooks(this.searchQuery, this.booksToShow)
             .subscribe(
               (response) => {
-                // ...
+                const fetchedBooks = response.docs.filter(
+                  (book) =>
+                    book.title &&
+                    book.author_name &&
+                    book.author_name.length > 0
+                );
+
+                const bookshelfTitles = new Set(
+                  this.bookshelfBooks.map((book) => book.title)
+                );
+
+                fetchedBooks.forEach((book) => {
+                  if (bookshelfTitles.has(book.title)) {
+                    const currBook = this.bookshelfBooks.find(
+                      (b) => b.title === book.title
+                    );
+                    if (currBook) {
+                      book.shelf = currBook.shelf;
+                    }
+                  }
+                });
+
+                this.books = fetchedBooks;
+                this.totalBooks = response.numFound;
+                this.isLoading = false;
+                this.buttonLessIsLoading = false;
+                this.buttonMoreIsLoading = false;
               },
               (error) => {
-                // ...
+                console.error('Error fetching books:', error);
+                this.isLoading = false;
+                this.buttonLessIsLoading = false;
+                this.buttonMoreIsLoading = false;
               }
             );
         }
