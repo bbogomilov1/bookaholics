@@ -50,6 +50,11 @@
   background-color: #bd8a47;
 }
 
+.form-actions button[disabled] {
+  background-color: rgb(190, 189, 189);
+  cursor: not-allowed;
+}
+
 .form-actions p {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -59,4 +64,13 @@
 a {
   text-decoration: none;
   color: #b4782b;
+}
+
+.error-message {
+  color: rgb(238, 0, 0);
+  font-style: italic;
+}
+
+.general-msg {
+  text-align: center;
 }

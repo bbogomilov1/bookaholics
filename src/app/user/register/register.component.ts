@@ -28,8 +28,8 @@ export class RegisterComponent {
   });
 
   allUsersResponse = {};
-  errorMessageEmail: string = '';
   errorMessage: string = '';
+  errorMessageEmail: string = '';
 
   constructor(
     private fb: FormBuilder,

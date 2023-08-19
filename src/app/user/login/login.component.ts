@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { User } from 'src/app/types/user';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/shared/auth.service';
+import { appEmailValidator } from 'src/app/shared/validators/app-email-validator';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +14,16 @@ import { AuthService } from 'src/app/shared/auth.service';
 })
 export class LoginComponent implements OnInit {
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
+    email: ['', [Validators.required, appEmailValidator()]],
+    password: ['', [Validators.required, Validators.minLength(5)]],
   });
+
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private http: HttpClient,
     private cookieService: CookieService,
     private authService: AuthService
   ) {}
@@ -54,14 +55,15 @@ export class LoginComponent implements OnInit {
             })
           );
           this.authService.login(user);
-          console.log('Logged in successfully');
           this.router.navigate(['/']);
         } else {
-          console.log('Invalid email or password');
+          this.errorMessage = 'Invalid email or password';
         }
       },
       (error) => {
-        console.error('Error fetching users:', error);
+        this.errorMessage =
+          'An error occurred while logging-in. Please try again later.';
+        throw new Error('Error fetching users:', error.message);
       }
     );
   }

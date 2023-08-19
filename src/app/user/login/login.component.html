@@ -9,7 +9,22 @@
         class="form-control"
         required
       />
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('email')?.touched && form.get('email')?.hasError('required')
+        "
+      >
+        Email is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="form.get('email')?.hasError('invalidEmail')"
+      >
+        Invalid email format.
+      </p>
     </div>
+
     <div class="form-group">
       <label for="password">Password:</label>
       <input
@@ -18,9 +33,31 @@
         class="form-control"
         required
       />
+      <p
+        class="error-message"
+        *ngIf="
+          form.get('password')?.touched &&
+          form.get('password')?.hasError('required')
+        "
+      >
+        Password is required.
+      </p>
+      <p
+        class="error-message"
+        *ngIf="form.get('password')?.hasError('minlength')"
+      >
+        Password must be at least 5 characters long.
+      </p>
     </div>
+
+    <div *ngIf="errorMessage" class="error-message general-msg">
+      {{ errorMessage }}
+    </div>
+
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Login</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        Login
+      </button>
       <p>
         Don't have an account? Sign up now from
         <a routerLink="/user/register">here</a>
